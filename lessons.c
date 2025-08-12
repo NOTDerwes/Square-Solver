@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <ctype.h>
 #define MAXSIZE 100
 
 float koefficient(char dgt_massive[], int l, int r);
@@ -50,27 +51,44 @@ int main() {
             }
     }
 
-    discr = sqrt((b * b - 4 * a * c));
+    if (a) {
+        discr = (b * b - 4 * a * c);
 
-    x1 = (-1 * b - discr) / (2 * a);
-    x2 = (-1 * b + discr) / (2 * a);
-
-    if (x1 == x2)
-        printf("Корень: %.2f \n", x1);
-    else{
-        printf("Корень 1: %.2f\n", x1);
-        printf("Корень 2: %.2f\n", x2);
+        if (discr > 0) {
+            x1 = (-b - sqrt(discr)) / (2 * a);
+            x2 = (-b + sqrt(discr)) / (2 * a);
+            printf("Корень 1: %.2f\n", x1);
+            printf("Корень 2: %.2f\n", x2);
+        }
+        else if (discr == 0) {
+            x1 = -b / (2 * a);
+            printf("Корень: %.2f \n", x1);
+        }
+        else
+            printf("Корни есть, но они мнимые(");
+    }
+    else {
+        if (b) {
+            x1 = -c / b;
+            printf("Корень: %.2f\n", x1);
+        }
+        else
+        printf("Корней нет(");
     }
     return 0;
 }
 
 float koefficient(char dgt_massive[], int l, int r) { //функция получения численного коэффициента из подстроки
-
+    if (r + 1 == l) { //в случае, когда перед х-ом нет коэффициента
+        if (isdigit(dgt_massive[l])) //проверка, что это коэфф перед х, а не цифра
+            return dgt_massive[l] - '0';
+        else
+            return 1;
+    }
     char digits[r - l + 1];
     float nums;
     for (int i = l; i <= r; i++)
         digits[i - l] = dgt_massive[i];
     nums = atof(digits);
-    memset(digits, 0, sizeof(digits));
     return nums;
 }
