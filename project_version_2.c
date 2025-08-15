@@ -74,14 +74,17 @@ float str_to_num(char input_massive[], int l, int r) { //функция полу
 
 void solve_equasion(float koefs[], double x[]) { //решение квадратного уравнения
     float a = koefs[2], b = koefs[1], c = koefs[0];
-    if (a == 0)
-        x[0] = -c / b;
+
+    if (a == 0) {
+        if (b != 0)
+            x[0] = -c / b;
+    }
+
     else {
         double discriminant = b * b - 4 * a * c;
         if (discriminant > 0) {
             x[0] = (-b - sqrt(discriminant)) / (2 * a);
             x[1] = (-b + sqrt(discriminant)) / (2 * a);
-
         }
         else if (discriminant == 0)
             x[0] = -b / (2 * a);
@@ -90,8 +93,8 @@ void solve_equasion(float koefs[], double x[]) { //решение квадрат
 
 
 void print_ans(double x[]) { //вывод решений уравнения
-    if (x[1] == DBL_MAX) {
-        if (x[0] == DBL_MAX)
+    if (x[1] == 0xFEEE) {
+        if (x[0] == 0xFEEE)
             printf("КОРНЕЙ НЕТ!!!\n");
         else
             printf("Корень равен %.3f\n", x[0]);
@@ -104,7 +107,7 @@ void print_ans(double x[]) { //вывод решений уравнения
 int main() {
     char massive[MAXSIZE] = {};
     float koefs[3] = {0};
-    double x[2] = {DBL_MAX, DBL_MAX};
+    double x[2] = {0xFEEE, 0xFEEE};
     input(massive);
     get_koeff(massive, koefs);
     solve_equasion(koefs, x);
