@@ -89,6 +89,10 @@ void solve_equasion(float koefs[], double x[]) { //решение квадрат
         else if (discriminant == 0)
             x[0] = -b / (2 * a);
     }
+    if (x[0] == 0)
+        x[0] = 0;
+    if (x[1] == 0)
+        x[1] = 0;
 }
 
 
