@@ -5,11 +5,10 @@
 #include <float.h>
 #include <ctype.h>
 #define MAXSIZE 100
-int flag = 1;
 
 void input(char input_massive[]);
 void get_koeff(char input_massive[], float koefs[]);
-float str_to_num(char dgt_massive[], int l, int r);
+float str_to_num(char dgt_massive[], int l, int r, int flag);
 void solve_equasion(float koeffs[], double x[]);
 void print_ans(double x[]);
 
@@ -35,6 +34,7 @@ void input(char input_massive[]) { //функция ввода уравнени�
 
 void get_koeff(char input_massive[], float koefs[]) { //функция сканирует входную строку и считает коэффициенты полинома
     int l = 0;
+    int flag = 1;
     int size = strlen(input_massive);
     for (int r = 0; r < size; r++) {
         l = r;
@@ -44,14 +44,14 @@ void get_koeff(char input_massive[], float koefs[]) { //функция скан�
 
 
         if (input_massive[r] == 'x')
-            koefs[1] += str_to_num(input_massive, l, r - 1);
+            koefs[1] += str_to_num(input_massive, l, r - 1, flag);
 
         else {
             if (input_massive[r - 1] == '^') {
-                koefs[input_massive[r] - '0'] += str_to_num(input_massive, l, r - 3);
+                koefs[input_massive[r] - '0'] += str_to_num(input_massive, l, r - 3, flag);
             }
             else
-                koefs[0] += str_to_num(input_massive, l, r);
+                koefs[0] += str_to_num(input_massive, l, r, flag);
         }
         if (input_massive[r + 1] == '=') {
             r++;
@@ -61,7 +61,7 @@ void get_koeff(char input_massive[], float koefs[]) { //функция скан�
 }
 
 
-float str_to_num(char input_massive[], int l, int r) { //функция получения численного коэффициента из подстроки
+float str_to_num(char input_massive[], int l, int r, int flag) { //функция получения численного коэффициента из подстроки
     char digits[MAXSIZE] = {};
     float nums = 0;
     for (int i = l; i <= r; i++){
@@ -74,9 +74,12 @@ float str_to_num(char input_massive[], int l, int r) { //функция полу
 
 void solve_equasion(float koefs[], double x[]) { //решение квадратного уравнения
     float a = koefs[2], b = koefs[1], c = koefs[0];
-
     if (a == 0) {
-        if (b != 0)
+        if (b == 0) {
+            if (c == 0)
+                x[0] = 0xDEADBEEF; //корень неопределен
+        }
+        else
             x[0] = -c / b;
     }
 
@@ -100,18 +103,20 @@ void print_ans(double x[]) { //вывод решений уравнения
     if (x[1] == 0xFEEE) {
         if (x[0] == 0xFEEE)
             printf("КОРНЕЙ НЕТ!!!\n");
+        else if (x[0] == 0xDEADBEEF)
+            printf("Корень не определен\n");
         else
             printf("Корень равен %.3f\n", x[0]);
     }
     else
-        printf("Меньший корень равен %.3f\n Больший корень равен %.3f\n", x[0], x[1]);
+        printf("Меньший корень равен %.3f\nБольший корень равен %.3f\n", x[0], x[1]);
 }
 
 
 int main() {
     char massive[MAXSIZE] = {};
     float koefs[3] = {0};
-    double x[2] = {0xFEEE, 0xFEEE};
+    double x[2] = {0xFEEE, 0xFEEE}; //по умолчанию корней нет
     input(massive);
     get_koeff(massive, koefs);
     solve_equasion(koefs, x);
