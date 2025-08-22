@@ -1,123 +1,78 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <math.h>
-#include <float.h>
-#include <ctype.h>
-#define MAXSIZE 100 //макс размер входного массива
+#include <double.h>
 
-void input(char input_massive[]);
-void get_koeff(char input_massive[], float koefs[]);
-float str_to_num(char dgt_massive[], int l, int r, int flag);
-void solve_equasion(float koeffs[], double x[]);
-void print_ans(double x[]);
+void input(double *a, double *b, double *c);
+void solve_equation(double a, double b, double c,
+                           double *x1, double *x2,
+                           int *roots_amount);
+void print_ans(double x1, double x2, int roots_amount);
 
 
-void input(char input_massive[]) { //функция ввода уравнения с форматированием
-    char symb = '0'; //текущий символ
-    int size = 0; //размер входного массива
-    printf("Введите квадратное уравнение без пробелов и знаков умножения:\n");
-    while ((symb = getchar()) != '\n' && size < MAXSIZE) {
-        if (symb == 'x') {
-            if (size == 0 || input_massive[size - 1] == '+' ||
-            input_massive[size - 1] == '-' || input_massive[size - 1] == '=') {
-                input_massive[size] = '1';
-                size++;
-            }
-        }
-        input_massive[size] = symb;
-        size++;
-    }
-    input_massive[size] = '\0';
+void input(double *a, double *b, double *c) { //function gets coeffs of equation
+    printf("Введите коэффициенты квадратного трёхчлена через пробел:\n");
+    scanf("%f %f %f", a, b, c);
 }
 
 
-void get_koeff(char input_massive[], float koefs[]) { //функция сканирует входную строку и считает коэффициенты полинома
-    int l = 0;
-    int flag = 1; //коэфф переноса эл-тов из правой части ур-я в левую, равен -1 после знака =
-    int size = strlen(input_massive); //размер входного массива
-    for (int r = 0; r < size; r++) {
-        l = r;
-        while (input_massive[r + 1] != '+' && input_massive[r + 1] != '-' &&
-        input_massive[r + 1] != '=' && input_massive[r + 1] != '\0')
-            r++;
-        if (input_massive[r] == 'x')
-            koefs[1] += str_to_num(input_massive, l, r - 1, flag);
-
-        else {
-            if (input_massive[r - 1] == '^') {
-                koefs[input_massive[r] - '0'] += str_to_num(input_massive, l, r - 3, flag);
-            }
-            else
-                koefs[0] += str_to_num(input_massive, l, r, flag);
+void solve_equation(double a, double b, double c,
+                           double *x1, double *x2,
+                           int *roots_amount) { //function solves equation
+    *roots_amount = 0;
+    if (fabs(a) < FLT_EPSILON) { //equation of type bx+c=0
+        if (fabs(b) < FLT_EPSILON) { //equation of type c=0
+            if (fabs(c) < FLT_EPSILON)
+                *roots_amount = -1; //undefined root
         }
-        if (input_massive[r + 1] == '=') {
-            r++;
-            flag = -1; //переносим все значения из левой части ур-я в правую с коэфф -1
+        else { //equation of type bx+c=0, b != 0
+            *x1 = -c / b;
+            *roots_amount = 1;
         }
     }
+    else { //square equation of type ax^2+bx+c=0, a != 0
+        double discriminant = b * b - 4 * a * c; //discriminant
+        if (discriminant > 0) { //2 roots
+            *x1 = (-b - sqrt(discriminant)) / (2 * a); //smaller root
+            *x2 = (-b + sqrt(discriminant)) / (2 * a); //bigger root
+            *roots_amount = 2;
+        }
+        else if (fabs(discriminant) < DBL_EPSILON) { //one root
+            *x1 = -b / (2 * a);
+            *roots_amount = 1;
+        }
+    }
+
+    //if root equals -0, turn it to 0
+    if (fabs(*x1) < DBL_EPSILON)
+        *x1 = 0;
+
+    if (fabs(*x2) < DBL_EPSILON)
+        *x2 = 0;
 }
 
 
-float str_to_num(char input_massive[], int l, int r, int flag) { //функция получения численного коэффициента из подстроки
-    char digits[MAXSIZE] = {}; //коэфф, записанный в виде char массива
-    float nums = 0; //численная запись коэфф-а
-    for (int i = l; i <= r; i++) {
-        digits[i - l] = input_massive[i];
-    }
-    nums = atof(digits);
-    return nums * flag;
-}
-
-
-void solve_equasion(float koefs[], double x[]) { //решение квадратного уравнения
-    float a = koefs[2], b = koefs[1], c = koefs[0];
-    if (a == 0) { //ур-е вида bx+c=0
-        if (b == 0) { //ур-е вида c=0
-            if (c == 0)
-                x[0] = 0xDEADBEEF; //корень неопределен
-        }
-        else //ур-е вида bx+c=0, где b != 0
-            x[0] = -c / b;
-    }
-    else { //ур-е вида ax^2+bx+c=0,где a != 0
-        double discriminant = b * b - 4 * a * c; //дискриминант
-        if (discriminant > 0) { //случай с 2мя корнями
-            x[0] = (-b - sqrt(discriminant)) / (2 * a); //меньший корень
-            x[1] = (-b + sqrt(discriminant)) / (2 * a); //больший корень
-        }
-        else if (discriminant == 0) //случай с единственным корнем
-            x[0] = -b / (2 * a);
-    }
-    // при получении корня -0 превращаем его в 0
-    if (x[0] == 0)
-        x[0] = 0;
-    if (x[1] == 0)
-        x[1] = 0;
-}
-
-
-void print_ans(double x[]) { //вывод решений уравнения
-    if (x[1] == 0xFEEE) { //не более одного корня
-        if (x[0] == 0xFEEE) //отсутствие корней
+void print_ans(double x1, double x2,
+               int roots_amount) { //print roots
+    if (roots_amount == 0) //0 roots
             printf("КОРНЕЙ НЕТ!!!\n");
-        else if (x[0] == 0xDEADBEEF) //бесконечное кол-во корней
-            printf("Корень не определен\n");
-        else //1 корень
-            printf("Корень равен %.3f\n", x[0]);
-    }
-    else //2 корня
-        printf("Меньший корень равен %.3f\nБольший корень равен %.3f\n", x[0], x[1]);
+    else if (roots_amount == -1) //undefined root
+        printf("Корень не определен\n");
+    else if (roots_amount == 1) //1 root
+        printf("Корень равен %g\n", x1);
+    else if (roots_amount == 2) //2 roots
+        printf("Меньший корень равен %g\nБольший корень равен %g\n", x1, x2);
+    else //condition if roots_amount doesn't match values above
+        printf("ERROR OF ROOTS");
 }
 
 
 int main() {
-    char massive[MAXSIZE] = {}; //строковый массив с исходным уравнением
-    float koefs[3] = {0}; //коэффициенты ур-я, по умолчанию все равны 0
-    double x[2] = {0xFEEE, 0xFEEE}; //корни ур-я, по умолчанию корней нет
-    input(massive); //ввод ур-я
-    get_koeff(massive, koefs); //высчитывание коэфф-ов ур-я
-    solve_equasion(koefs, x); //решение квадратного ур-я
-    print_ans(x); //вывод ответа
+    double a = 0, b = 0, c = 0; //coeffs of equation
+    double x1 = 0, x2 = 0; //roots of equation
+    int roots_amount = 0; //amount of roots, default value - 0
+    input(&a, &b, &c); //input of coeffs
+    solve_equation(a, b, c, &x1, &x2, &roots_amount); //solving of the equation
+    print_ans(x1, x2, roots_amount); //answer outputting
     return 0;
 }
