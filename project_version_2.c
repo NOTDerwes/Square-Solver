@@ -4,28 +4,46 @@
 #include <float.h>
 #include <assert.h>
 #include <string.h>
+#define UNDEFINED_ROOTS -1
+#define ZERO_ROOTS 0
+#define ONE_ROOT 1
+#define TWO_ROOTS 2
+#define TRUE 1
+#define FALSE 0
 
-void input(double *a, double *b, double *c);
+
+void input(struct coeffs *);
 void input_coeff(char curr_coeff, double *inputing_coeff);
 int is_double(double *num);
 void clean_buffer();
 void solve_equation(double a, double b, double c,
-                           double *x1, double *x2,
-                           int *roots_amount);
+                    double *x1, double *x2,
+                    int *roots_amount);
 void print_ans(double x1, double x2, int roots_amount);
 
+struct coeffs {
+    double a;
+    double b;
+    double c;
+};
 
-void input(double *a, double *b, double *c) { //function gets coeffs of equation
+struct roots {
+    double x1;
+    double x2;
+    int amount;
+};
+
+void input(struct coeffs *equation_coeffs) { //function gets coeffs of equation
     printf("Введите коэффициенты квадратного трёхчлена.\n");
-    input_coeff('a', a);
-    input_coeff('b', b);
-    input_coeff('c', c);
+    input_coeff('a', &equation_coeffs -> a);
+    input_coeff('b', &equation_coeffs -> b);
+    input_coeff('c', &equation_coeffs -> c);
 }
 
 
 void input_coeff(char curr_coeff, double *inputing_coeff) { //function gets current coeff
-    int correct_input = 0; //check if inputing letters instead of digits
-    int flag_retry = 1;
+    int correct_input = FALSE; //check if inputing letters instead of digits
+    int flag_retry = TRUE;
     do {
         printf("Введите коэффициент %c: ", curr_coeff);
         correct_input = scanf("%lf", inputing_coeff);
@@ -35,7 +53,7 @@ void input_coeff(char curr_coeff, double *inputing_coeff) { //function gets curr
         if (!correct_input || !is_double(inputing_coeff))
             printf("Коэффициент %c введен в неправильном формате! Попробуйте ещё раз\n", curr_coeff);
         else
-            flag_retry = 0;
+            flag_retry = FALSE;
 
         clean_buffer();
     } while(flag_retry);
@@ -63,15 +81,15 @@ void solve_equation(double a, double b, double c,
     assert(!isnan(b) || "b is nan");
     assert(!isnan(c) || "c is nan");
 
-    *roots_amount = 0; //default amount of roots
+    *roots_amount = ZERO_ROOTS; //default amount of roots
     if (fabs(a) < DBL_EPSILON) { //equation of type bx+c=0
         if (fabs(b) < DBL_EPSILON) { //equation of type c=0
             if (fabs(c) < DBL_EPSILON)
-                *roots_amount = -1; //undefined root
+                *roots_amount = UNDEFINED_ROOTS; //undefined root
         }
         else { //equation of type bx+c=0, b != 0
             *x1 = -c / b;
-            *roots_amount = 1;
+            *roots_amount = ONE_ROOT;
         }
     }
     else { //square equation of type ax^2+bx+c=0, a != 0
@@ -79,11 +97,11 @@ void solve_equation(double a, double b, double c,
         if (discriminant > 0) { //2 roots
             *x1 = (-b - sqrt(discriminant)) / (2 * a); //smaller root
             *x2 = (-b + sqrt(discriminant)) / (2 * a); //bigger root
-            *roots_amount = 2;
+            *roots_amount = TWO_ROOTS;
         }
         else if (fabs(discriminant) < DBL_EPSILON) { //one root
             *x1 = -b / (2 * a);
-            *roots_amount = 1;
+            *roots_amount = ONE_ROOT;
         }
     }
 
@@ -99,40 +117,39 @@ void solve_equation(double a, double b, double c,
 void print_ans(double x1, double x2,
                int roots_amount) { //print roots
 
-    assert(-1 <= roots_amount && roots_amount <= 2);
-    assert(!isnan(x1) || roots_amount < 1);
+    assert(UNDEFINED_ROOTS <= roots_amount && roots_amount <= TWO_ROOTS);
+    assert(!isnan(x1) || roots_amount < ONE_ROOT);
 
-    if (roots_amount == 0) //0 roots
+    if (roots_amount == ZERO_ROOTS) //0 roots
             printf("КОРНЕЙ НЕТ!!!\n\n");
-    else if (roots_amount == -1) //undefined root
+    else if (roots_amount == UNDEFINED_ROOTS) //undefined root
         printf("Корень не определен\n\n");
-    else if (roots_amount == 1) //1 root
+    else if (roots_amount == ONE_ROOT) //1 root
         printf("Корень равен %g\n\n", x1);
-    else if (roots_amount == 2) //2 roots
+    else if (roots_amount == TWO_ROOTS) //2 roots
         printf("Меньший корень равен %g\nБольший корень равен %g\n\n", x1, x2);
 }
 
 
 int main() {
-    double a = NAN, b = NAN, c = NAN; //coeffs of equation
-    double x1 = NAN, x2 = NAN; //roots of equation
-    int roots_amount = NAN; //amount of roots, default value - 0
     char if_continue[10] = {}; //flag if user wants to continue inputing equations
-    int continue_enter = 1;
+    struct coeffs equation_coeffs = {NAN};
+    struct roots equation_roots = {NAN};
+    int continue_enter = TRUE;
     while (continue_enter) {
-        a = NAN, b = NAN, c = NAN;
-        x1 = NAN, x2 = NAN;
-        input(&a, &b, &c); //input of coeffs
-        solve_equation(a, b, c, &x1, &x2, &roots_amount); //solving of the equation
-        print_ans(x1, x2, roots_amount); //answer outputting
-
+        equation_coeffs = {NAN};
+        equation_roots = {NAN};
+        input(&equation_coeffs); //input of coeffs
+        solve_equation(equation_coeffs.a, equation_coeffs.b, equation_coeffs.c,
+                       &equation_roots.x1, &equation_roots.x2, &equation_roots.amount); //solving of the equation
+        print_ans(equation_roots.x1, equation_roots.x2, equation_roots.amount); //answer outputting
         printf("Введите \"Да\", если хотите ввести ещё одно уравнение\n");
-        scanf("%3s", if_continue);
+        scanf("%5s", if_continue);
         clean_buffer();
 
         if (strcmp(if_continue, "Да")) { //if inputed not "Да", program finishes
             printf("Программа завершена\n");
-            continue_enter=0;
+            continue_enter = FALSE;
         }
     }
     return 0;
