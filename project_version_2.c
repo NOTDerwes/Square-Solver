@@ -16,9 +16,12 @@ void input(struct coeffs *);
 void input_coeff(char curr_coeff, double *inputing_coeff);
 int is_double(double *num);
 void clean_buffer();
-void solve_equation(double a, double b, double c,
+void solve_square_equation(double a, double b, double c,
                     double *x1, double *x2,
                     int *roots_amount);
+void solve_linear_equation(double k, double b,
+                           double *x,
+                           int *roots_amount);
 void print_ans(double x1, double x2, int roots_amount);
 void test_solve_equation();
 
@@ -71,7 +74,7 @@ void clean_buffer() { //cleans buffer after using scanf
 }
 
 
-void solve_equation(double a, double b, double c,
+void solve_square_equation(double a, double b, double c,
                            double *x1, double *x2,
                            int *roots_amount) { //function solves equation
 
@@ -83,15 +86,10 @@ void solve_equation(double a, double b, double c,
     assert(!isnan(c) || "c is nan");
 
     *roots_amount = ZERO_ROOTS; //default amount of roots
+
     if (fabs(a) < DBL_EPSILON) { //equation of type bx+c=0
-        if (fabs(b) < DBL_EPSILON) { //equation of type c=0
-            if (fabs(c) < DBL_EPSILON)
-                *roots_amount = UNDEFINED_ROOTS; //undefined root
-        }
-        else { //equation of type bx+c=0, b != 0
-            *x1 = -c / b;
-            *roots_amount = ONE_ROOT;
-        }
+        solve_linear_equation(b, c, x1, roots_amount);
+        return;
     }
     else { //square equation of type ax^2+bx+c=0, a != 0
         double discriminant = b * b - 4 * a * c; //discriminant
@@ -115,13 +113,30 @@ void solve_equation(double a, double b, double c,
 }
 
 
+void solve_linear_equation(double k, double b,
+                           double *x,
+                           double *roots_amount) { //solves equations of type kx+b=0
+    if (fabs(k) < DBL_EPSILON) { //equation of type b=0
+            if (fabs(b) < DBL_EPSILON)
+                *roots_amount = UNDEFINED_ROOTS; //undefined root
+        }
+        else { //equation of type kx+b=0, k != 0
+            *x = -b / k;
+            *roots_amount = ONE_ROOT;
+        }
+    //if root equals -0, turn it to 0
+    if (fabs(*x) < DBL_EPSILON)
+        *x = 0;
+}
+
+
 void test_solve_equation() {
     for (double a = -100; a <= 100; a++) {
         for (double b = -100; b <= 100; b++) {
             for (double c = -100; c <= 100; c++) {
                 struct coeffs test_cf = {a, b, c};
                 struct roots test_rts = {NAN, NAN, NAN};
-                solve_equation(test_cf.a, test_cf.b, test_cf.c,
+                solve_square_equation(test_cf.a, test_cf.b, test_cf.c,
                        &test_rts.x1, &test_rts.x2, &test_rts.amount);
                 if (isnan(test_rts.amount) || (isnan(test_rts.x1) && isnan(test_rts.x2) && test_rts.amount != 0)) {
                     printf("ERROR in solve_equation func. GOT a: %lf, b: %lf, c: %lf, x1: %lf, x2: %lf, amount: %d\n\n", test_cf.a, test_cf.b, test_cf.c, test_rts.x1, test_rts.x2, test_rts.amount);
@@ -160,7 +175,7 @@ int main() {
         equation_coeffs = {NAN};
         equation_roots = {NAN};
         input(&equation_coeffs); //input of coeffs
-        solve_equation(equation_coeffs.a, equation_coeffs.b, equation_coeffs.c,
+        solve_square_equation(equation_coeffs.a, equation_coeffs.b, equation_coeffs.c,
                        &equation_roots.x1, &equation_roots.x2, &equation_roots.amount); //solving of the equation
         print_ans(equation_roots.x1, equation_roots.x2, equation_roots.amount); //answer outputting
         printf("Введите \"Да\", если хотите ввести ещё одно уравнение\n");
