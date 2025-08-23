@@ -20,6 +20,7 @@ void solve_equation(double a, double b, double c,
                     double *x1, double *x2,
                     int *roots_amount);
 void print_ans(double x1, double x2, int roots_amount);
+void test_solve_equation();
 
 struct coeffs {
     double a;
@@ -114,6 +115,24 @@ void solve_equation(double a, double b, double c,
 }
 
 
+void test_solve_equation() {
+    for (double a = -100; a <= 100; a++) {
+        for (double b = -100; b <= 100; b++) {
+            for (double c = -100; c <= 100; c++) {
+                struct coeffs test_cf = {a, b, c};
+                struct roots test_rts = {NAN, NAN, NAN};
+                solve_equation(test_cf.a, test_cf.b, test_cf.c,
+                       &test_rts.x1, &test_rts.x2, &test_rts.amount);
+                if (isnan(test_rts.amount) || (isnan(test_rts.x1) && isnan(test_rts.x2) && test_rts.amount != 0)) {
+                    printf("ERROR in solve_equation func. GOT a: %lf, b: %lf, c: %lf, x1: %lf, x2: %lf, amount: %d\n\n", test_cf.a, test_cf.b, test_cf.c, test_rts.x1, test_rts.x2, test_rts.amount);
+                    continue;
+                }
+            }
+        }
+    }
+}
+
+
 void print_ans(double x1, double x2,
                int roots_amount) { //print roots
 
@@ -132,6 +151,7 @@ void print_ans(double x1, double x2,
 
 
 int main() {
+    test_solve_equation();
     char if_continue[10] = {}; //flag if user wants to continue inputing equations
     struct coeffs equation_coeffs = {NAN};
     struct roots equation_roots = {NAN};
@@ -154,3 +174,6 @@ int main() {
     }
     return 0;
 }
+
+
+
