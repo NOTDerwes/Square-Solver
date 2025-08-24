@@ -3,12 +3,12 @@
 
 #include "double_operations.h"
 
-bool is_double(double num) { ///checks if number is double-like
+bool is_double(double num) {
     return !isnan(num) && !isinf(num);
 }
 
 
-int compare_doubles(double first, double second) { ///compares double values
+int compare_doubles(double first, double second) {
     double delta = first - second;
     if (delta < -DBL_EPSILON)
         return Smaller;
@@ -18,7 +18,7 @@ int compare_doubles(double first, double second) { ///compares double values
 }
 
 
-bool same_double_type(double first, double second) { ///checks if both doubles are nan, +-inf, jr both not
+bool same_double_type(double first, double second) {
     if(isinf(first) && isinf(second))
         return signbit(first) == signbit(second);
     return (isnan(first) && isnan(second)) ||
@@ -26,9 +26,8 @@ bool same_double_type(double first, double second) { ///checks if both doubles a
 
 }
 
-/*checks if both doubles are equal within margin error
-also returns TRUE if both of numvers are inf or nan*/
-bool equal_doubles(double first, double second) {
+
+bool absolutely_same_doubles(double first, double second) {
     if (same_double_type(first, second)) {
         if (is_double(first))
             return compare_doubles(first, second) == Equal;
@@ -38,8 +37,12 @@ bool equal_doubles(double first, double second) {
 }
 
 
-void swap_doubles(double *first, double *second) { ///swaps two double numbers
+void swap_doubles(double *first, double *second) {
     double temp = *first;
     *first = *second;
     *second = temp;
+}
+
+bool is_zero(double number) {
+    return absolutely_same_doubles(number, ZERO);
 }

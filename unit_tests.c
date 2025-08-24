@@ -59,8 +59,8 @@ int test_one_equation(double test_a, double test_b, double test_c,
                           &result_rts);
 
     if ((result_rts.amount != expected_rts_amount) ||
-        !equal_doubles(expected_x2, result_rts.x2) ||
-        !equal_doubles(expected_x1, result_rts.x1)) {
+        !absolutely_same_doubles(expected_x2, result_rts.x2) ||
+        !absolutely_same_doubles(expected_x1, result_rts.x1)) {
         printf("ERROR in func \"solve_square_equation\"!\n\nINPUT COEFFS\na: %lf\nb: %lf\nc: %lf\n", test_a, test_b, test_c);
         printf("EXPECTED\nroots amount: %d\nx1: %lf\nx2: %lf\n", expected_rts_amount, expected_x1, expected_x2);
         printf("GOT\nroots amount: %d\nx1: %lf\nx2: %lf\n", result_rts.amount, result_rts.x1, result_rts.x2);
