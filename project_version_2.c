@@ -4,49 +4,20 @@
 #include <assert.h>
 #include <string.h>
 #include <stdbool.h>
+#include "structs.h"
+#include "myconst.h"
 #include "double_operations.h"
-
-#define INPUTSIZE 20
-#define ZERO 0
-
-enum roots_count {
-    UndigistedRoot = 3,
-    UndefinedRoot = -1,
-    ZeroRoots,
-    OneRoot,
-    TwoRoots
-};
-
-struct Coeffs {
-    double a;
-    double b;
-    double c;
-};
-
-struct Roots {
-    double x1;
-    double x2;
-    int amount;
-};
+#include "solve_equation.h"
+#include "unit_tests.h"
 
 
 void input(struct Coeffs *equation_coeffs);
 void input_coeff(char curr_coeff, double *inputing_coeff);
-void swap_doubles(double *first, double *second);
 void reset_structs(struct Coeffs *reseting_coeffs,
                    struct Roots *reseting_roots);
 int letters_left();
 void clean_buffer();
-void solve_square_equation(struct Coeffs equation_coeffs,
-                           struct Roots *equation_roots);
-void solve_linear_equation(double k, double b,
-                           double *x,
-                           int *roots_amount);
-bool check_EOF(int if_eof);
 void print_ans(struct Roots equation_roots);
-int test_one_equation(double test_a, double test_b, double test_c,
-                       double exp_x1, double exp_x2, int exp_rts_amount);
-void test_solve_equation(char path[]);
 
 
 void input(struct Coeffs *equation_coeffs) { //function gets coeffs of equation
@@ -73,13 +44,6 @@ void input_coeff(char curr_coeff, double *inputing_coeff) { //function gets curr
 }
 
 
-void swap_doubles(double *first, double *second) {
-    double temp = *first;
-    *first = *second;
-    *second = temp;
-}
-
-
 void reset_structs(struct Coeffs *reseting_coeffs,
                    struct Roots *reseting_roots) {
     reseting_coeffs -> a = NAN;
@@ -100,130 +64,6 @@ int letters_left() { //checks if letters left in input buffer
 
 void clean_buffer() { //cleans buffer after using scanf
     while (getchar() != '\n') {}
-}
-
-
-void solve_square_equation(struct Coeffs equation_coeffs,
-                           struct Roots *equation_roots) { //function solves equation
-    double a = equation_coeffs.a, b = equation_coeffs.b, c = equation_coeffs.c;
-    double *x1 = &(equation_roots -> x1), *x2 = &(equation_roots -> x2);
-    int *roots_amount = &(equation_roots -> amount);
-
-    //checking of programmer errors
-    assert(x1 || "NULL pointer on x1");
-    assert(x2 || "NULL pointer on x2");
-    assert(!isnan(a) || "a is nan");
-    assert(!isnan(b) || "b is nan");
-    assert(!isnan(c) || "c is nan");
-
-    *roots_amount = ZeroRoots; //default amount of roots
-
-    if (equal_doubles(a, ZERO)) { //equation of type bx+c=0
-        solve_linear_equation(b, c, x1, roots_amount);
-        return;
-    }
-    else { //square equation of type ax^2+bx+c=0, a != 0
-        double discriminant = b * b - 4 * a * c; //discriminant
-        if (discriminant > 0) { //2 roots
-            *x1 = (-b - sqrt(discriminant)) / (2 * a); //smaller root
-            *x2 = (-b + sqrt(discriminant)) / (2 * a); //bigger root
-            *roots_amount = TwoRoots;
-        }
-        else if (equal_doubles(discriminant, ZERO)) { //one root
-            *x1 = -b / (2 * a);
-            *roots_amount = OneRoot;
-        }
-    }
-
-    //if root equals -0, turn it to 0
-    if (equal_doubles(*x1, ZERO))
-        *x1 = 0;
-
-    if (equal_doubles(*x2, ZERO))
-        *x2 = 0;
-}
-
-
-void solve_linear_equation(double k, double b,
-                           double *x,
-                           int *roots_amount) { //solves equations of type kx+b=0
-    if (equal_doubles(k, ZERO)) { //equation of type b=0
-            if (equal_doubles(b, ZERO))
-                *roots_amount = UndefinedRoot; //undefined root
-        }
-        else { //equation of type kx+b=0, k != 0
-            *x = -b / k;
-            *roots_amount = OneRoot;
-        }
-    //if root equals -0, turn it to 0
-    if (equal_doubles(*x, ZERO))
-        *x = 0;
-}
-
-
-bool check_EOF(int if_eof) {
-    return if_eof == EOF;
-}
-
-
-void test_solve_equation(char path[]) {
-    FILE *input_file = fopen(path, "r");
-
-    int red_nums = 0;
-
-    double test_a = NAN, test_b = NAN, test_c = NAN;
-    double exp_x1 = NAN, exp_x2 = NAN;
-    int exp_rts_amount = UndigistedRoot;
-
-    int correct_tests_amount = 0;
-    int tests_amount = 0;
-
-    while (true) {
-        test_a = test_b = test_c = NAN;
-        exp_x1 = exp_x2 =  NAN;
-        exp_rts_amount = UndigistedRoot;
-
-        red_nums = fscanf(input_file, "%lf %lf %lf | %d", &test_a, &test_b, &test_c, &exp_rts_amount);
-
-        if (exp_rts_amount == TwoRoots) {
-            fscanf(input_file, "%lf %lf", &exp_x1, &exp_x2);
-            if (exp_x1 > exp_x2)
-                swap_doubles(&exp_x1, &exp_x2);
-        }
-        else if (exp_rts_amount == OneRoot)
-            fscanf(input_file, "%lf", &exp_x1);
-
-        if (check_EOF(red_nums)) {
-            printf("MEET END OF TEST FILE\n\n");
-            break;
-        }
-        if (test_one_equation(test_a, test_b, test_c,
-                             exp_x1, exp_x2, exp_rts_amount))
-            correct_tests_amount++;
-
-        tests_amount++;
-    }
-    printf("CORRECTLY COMPLETED TESTS: %lg%%\n\n", 100.0 * correct_tests_amount / tests_amount);
-}
-
-
-int test_one_equation(double test_a, double test_b, double test_c,
-                       double exp_x1, double exp_x2, int exp_rts_amount) {
-    struct Coeffs test_cf = {.a = test_a, .b = test_b, .c = test_c};
-    struct Roots result_rts = {.x1 = NAN, .x2 = NAN, .amount = UndigistedRoot};
-    solve_square_equation(test_cf,
-                          &result_rts);
-
-    if ((result_rts.amount != exp_rts_amount) ||
-        !equal_doubles(exp_x2, result_rts.x2) ||
-        !equal_doubles(exp_x1, result_rts.x1)) {
-        printf("ERROR in func \"solve_square_equation\"!\n\nINPUT COEFFS\na: %lf\nb: %lf\nc: %lf\n", test_a, test_b, test_c);
-        printf("EXPECTED\nroots amount: %d\nx1: %lf\nx2: %lf\n", exp_rts_amount, exp_x1, exp_x2);
-        printf("GOT\nroots amount: %d\nx1: %lf\nx2: %lf\n", result_rts.amount, result_rts.x1, result_rts.x2);
-        printf("PLEASE CHECK YOUR FUNCTION!\n\n\n\n");
-        return 0;
-    }
-    return 1;
 }
 
 
