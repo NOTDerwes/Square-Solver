@@ -17,7 +17,7 @@ enum roots_count {
     TwoRoots
 };
 
-enum double_compare_flag {
+enum doubles_compare_flag {
     Smaller = -1,
     Equal,
     Bigger
@@ -41,7 +41,7 @@ void input_coeff(char curr_coeff, double *inputing_coeff);
 void swap_doubles(double *first, double *second);
 void reset_structs(struct Coeffs *reseting_coeffs,
                    struct Roots *reseting_roots);
-int is_double(double num);
+bool is_double(double num);
 int letters_left();
 void clean_buffer();
 void solve_square_equation(struct Coeffs equation_coeffs,
@@ -49,6 +49,7 @@ void solve_square_equation(struct Coeffs equation_coeffs,
 void solve_linear_equation(double k, double b,
                            double *x,
                            int *roots_amount);
+int compare_doubles(double first, double second);
 bool equal_doubles(double first, double second);
 bool check_EOF(int if_eof);
 bool same_double_type(double first, double second);
@@ -98,8 +99,18 @@ void reset_structs(struct Coeffs *reseting_coeffs,
 }
 
 
-int is_double(double num) { //checks if number is double-like
+ bool is_double(double num) { //checks if number is double-like
     return !isnan(num) && !isinf(num);
+}
+
+
+int compare_doubles(double first, double second) {
+    double delta = first - second;
+    if (delta < -DBL_EPSILON)
+        return Smaller;
+    else if (delta > DBL_EPSILON)
+        return Bigger;
+    return Equal;
 }
 
 
@@ -173,21 +184,26 @@ void solve_linear_equation(double k, double b,
 }
 
 
-bool equal_doubles(double first, double second) {
-    return fabs(first - second) < DBL_EPSILON || (isnan(first) && isnan(second));
-}
-
-
-bool check_EOF(int if_eof) {
-    return if_eof == -1;
-}
-
-
 bool same_double_type(double first, double second) {
     if(isinf(first) && isinf(second))
         return signbit(first) == signbit(second);
     return (isnan(first) && isnan(second)) ||
             (is_double(first) && is_double(second));
+}
+
+
+bool equal_doubles(double first, double second) {
+    if (same_double_type(first, second)) {
+        if (is_double(first))
+            return compare_doubles(first, second) == Equal;
+        return true;
+    }
+    return false;
+}
+
+
+bool check_EOF(int if_eof) {
+    return if_eof == EOF;
 }
 
 
@@ -243,8 +259,6 @@ void test_solve_equation(char path[]) {
 }
 
 
-
-
 void print_ans(struct Roots equation_roots) { //print roots
     double x1 = equation_roots.x1, x2 = equation_roots.x2;
     int roots_amount = equation_roots.amount;
@@ -263,7 +277,7 @@ void print_ans(struct Roots equation_roots) { //print roots
 
 
 int main() {
-    test_solve_equation("input.txt");
+    test_solve_equation("test_input.txt");
     char if_continue[INPUTSIZE] = {}; //flag if user wants to continue inputing equations
     struct Coeffs equation_coeffs = {.a = NAN, .b = NAN, .c = NAN};
     struct Roots equation_roots = {.x1 = NAN, .x2 = NAN, .amount = UndigistedRoot};
@@ -286,6 +300,5 @@ int main() {
     }
     return 0;
 }
-
 
 
