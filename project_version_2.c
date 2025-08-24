@@ -4,10 +4,10 @@
 #include <assert.h>
 #include <string.h>
 #include <stdbool.h>
+#include "double_operations.h"
 
 #define INPUTSIZE 20
 #define ZERO 0
-
 
 enum roots_count {
     UndigistedRoot = 3,
@@ -15,12 +15,6 @@ enum roots_count {
     ZeroRoots,
     OneRoot,
     TwoRoots
-};
-
-enum doubles_compare_flag {
-    Smaller = -1,
-    Equal,
-    Bigger
 };
 
 struct Coeffs {
@@ -41,7 +35,6 @@ void input_coeff(char curr_coeff, double *inputing_coeff);
 void swap_doubles(double *first, double *second);
 void reset_structs(struct Coeffs *reseting_coeffs,
                    struct Roots *reseting_roots);
-bool is_double(double num);
 int letters_left();
 void clean_buffer();
 void solve_square_equation(struct Coeffs equation_coeffs,
@@ -49,10 +42,7 @@ void solve_square_equation(struct Coeffs equation_coeffs,
 void solve_linear_equation(double k, double b,
                            double *x,
                            int *roots_amount);
-int compare_doubles(double first, double second);
-bool equal_doubles(double first, double second);
 bool check_EOF(int if_eof);
-bool same_double_type(double first, double second);
 void print_ans(struct Roots equation_roots);
 int test_one_equation(double test_a, double test_b, double test_c,
                        double exp_x1, double exp_x2, int exp_rts_amount);
@@ -98,21 +88,6 @@ void reset_structs(struct Coeffs *reseting_coeffs,
     reseting_roots -> x1 = NAN;
     reseting_roots -> x2 = NAN;
     reseting_roots -> amount = UndigistedRoot;
-}
-
-
- bool is_double(double num) { //checks if number is double-like
-    return !isnan(num) && !isinf(num);
-}
-
-
-int compare_doubles(double first, double second) {
-    double delta = first - second;
-    if (delta < -DBL_EPSILON)
-        return Smaller;
-    else if (delta > DBL_EPSILON)
-        return Bigger;
-    return Equal;
 }
 
 
@@ -183,24 +158,6 @@ void solve_linear_equation(double k, double b,
     //if root equals -0, turn it to 0
     if (equal_doubles(*x, ZERO))
         *x = 0;
-}
-
-
-bool same_double_type(double first, double second) {
-    if(isinf(first) && isinf(second))
-        return signbit(first) == signbit(second);
-    return (isnan(first) && isnan(second)) ||
-            (is_double(first) && is_double(second));
-}
-
-
-bool equal_doubles(double first, double second) {
-    if (same_double_type(first, second)) {
-        if (is_double(first))
-            return compare_doubles(first, second) == Equal;
-        return true;
-    }
-    return false;
 }
 
 
