@@ -9,12 +9,10 @@
 #include "unit_tests.h"
 
 #define INPUTSIZE 20
-char const * const YES_ANSWER = "Да";
+#define YES_ANSWER "Да"
 
 void input(struct Coeffs *equation_coeffs);
 void input_coeff(char curr_coeff, double *inputing_coeff);
-void reset_structs(struct Coeffs *reseting_coeffs,
-                   struct Roots *reseting_roots);
 int letters_left();
 void clean_buffer();
 bool continue_enter();
@@ -41,16 +39,6 @@ void input_coeff(char curr_coeff, double *inputing_coeff) { /// function gets cu
         else
             flag_retry = false;
     } while(flag_retry);
-}
-
-void reset_structs(struct Coeffs *reseting_coeffs,
-                   struct Roots *reseting_roots) { /// set all Coeffs and Roots structure elements default value
-    reseting_coeffs -> a = NAN;
-    reseting_coeffs -> b = NAN;
-    reseting_coeffs -> c = NAN;
-    reseting_roots -> x1 = NAN;
-    reseting_roots -> x2 = NAN;
-    reseting_roots -> amount = UndigistedRoot;
 }
 
 

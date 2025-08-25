@@ -57,3 +57,14 @@ void solve_linear_equation(double k, double b,
     if (is_zero(*x))
         *x = 0;
 }
+
+
+void reset_structs(struct Coeffs *reseting_coeffs,
+                   struct Roots *reseting_roots) { /// set all Coeffs and Roots structure elements default value
+    reseting_coeffs -> a = NAN;
+    reseting_coeffs -> b = NAN;
+    reseting_coeffs -> c = NAN;
+    reseting_roots -> x1 = NAN;
+    reseting_roots -> x2 = NAN;
+    reseting_roots -> amount = UndigistedRoot;
+}

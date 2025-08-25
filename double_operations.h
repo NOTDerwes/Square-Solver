@@ -27,6 +27,6 @@ bool same_double_type(double first, double second);
 /** Swap values of two double numbers */
 void swap_doubles(double *first, double *second);
 /** Returns true if number equals zero within the margin of error, retuns false otherwise */
-bool is_zero(double number)
+bool is_zero(double number);
 
 #endif
