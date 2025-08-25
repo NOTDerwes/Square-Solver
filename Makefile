@@ -31,33 +31,60 @@ SANITIZERS = -fsanitize=address,alignment,bool,bounds,enum,$\
 LDFLAGS = $(SANITIZERS) -pie -fPIE -lm
 
 #Source files
-SRCS = main.c double_operations.c solve_equation.c unit_tests.c
+SRCS = ./src/main.c ./src/double_operations.c ./src/solve_equation.c ./src/unit_tests.c
 OBJS = $(SRCS:.c=.o)
 TARGET = square_solver
 
+# Colors for output
+GREEN = \033[0;32m
+RED = \033[0;31m
+BLUE = \033[0;34m
+NC = \033[0m
+
 #Main target
 $(TARGET): $(OBJS)
-	$(CC) $(CFLAGS) -o $@ $(OBJS) $(LDFLAGS)
+	@echo "$(BLUE)Сборка ...$(NC)"
+	@if $(CC) $(CFLAGS) -o $@ $(OBJS) $(LDFLAGS); then \
+                echo "$(GREEN)Сборка проведена успешно в $(TARGET)!$(NC)"; \
+        else \
+                echo "$(RED)✗ Ошибка при сборке$(NC)"; \
+		exit 1; \
+        fi
 
 #Compile .c to .o
 %.o: %.c
+	@echo "$(BLUE)Компиляция ...$(NC)"
 	$(CC) $(CFLAGS) $(SANITIZERS) -c $< -o $@
+	@echo "$(GREEN)Компиляция проведена успешно!$(NC)"
 
 #Clean build files
 clean:
+	@echo "$(BLUE)Очистка...$(NC)"
 	rm -f $(OBJS) $(TARGET) *.gcno *.gcda
+	@echo "$(GREEN)Очистка завершена!$(NC)"
 
 #Run the program
 run: $(TARGET)
+	@echo "$(BLUE)Запуск программы ...$(NC)"
 	./$(TARGET)
+	@echo "$(GREEN)Программа завершена!$(NC)"
 
 #Run with debugger
 debug: $(TARGET)
+	@echo "$(BLUE)=== ЗАПУСК ОТЛАДКИ ===$(NC)"
 	gdb -q ./$(TARGET)
 
 #Run tests
 test: $(TARGET)
+	@echo "$(BLUE)=== ЗАПУСК ТЕСТОВ ===$(NC)"
 	./$(TARGET) --test
+	@echo "$(BLUE)=== ТЕСТЫ ЗАВЕРШЕНЫ ===$(NC)"
 
+help:
+	@echo "$(BLUE)Доступные команды:$(NC)"
+	@echo "  make all     - собрать обычную версию программы"
+	@echo "  make test    - собрать тестовую версию и запустить тесты"
+	@echo "  make clean   - очистить сборочные файлы"
+	@echo "  make help    - показать эту справку"
 
 .PHONY: clean run debug test

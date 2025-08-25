@@ -1,3 +1,13 @@
+/*!
+ * @file unit_tests.c
+ * @brief Модуль тестирования решения квадратных уравнений
+ * @author NOTDerwes
+ * @date 25.08.2025
+ * @version Beta
+ *
+ * Модуль предоставляет функции для тестирования решения квадратных уравнений
+ */
+
 #include <stdio.h>
 #include <math.h>
 
@@ -35,7 +45,6 @@ void test_solve_equation(char path[]) {
             fscanf(input_file, "%lf", &expected.x1);
 
         if (check_EOF(red_nums)) {
-            printf("MEET END OF TEST FILE\n\n");
             break;
         }
         if (test_one_equation(test_cf,

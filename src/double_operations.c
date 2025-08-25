@@ -1,3 +1,15 @@
+/*!
+ * @file double_operations.c
+ * @brief Модуль операций над числами типа double
+ * @author NOTDerwes
+ * @date 25.08.2025
+ *
+ * Модуль предоставляет функции для работы с числами типа double,
+ * включая сравнение, проверку специальных значений и операции с учётом
+ * погрешности вычислений с плавающей точкой.
+ * @note Описание функций см. в double_operations.h
+ */
+
 #include <float.h>
 #include <math.h>
 
@@ -10,6 +22,10 @@ bool is_double(double num) {
 
 int compare_doubles(double first, double second) {
     double delta = first - second;
+
+    if (!is_double(first) || !is_double(second))
+        return NotDouble;
+
     if (delta < -DBL_EPSILON)
         return Smaller;
     else if (delta > DBL_EPSILON)
