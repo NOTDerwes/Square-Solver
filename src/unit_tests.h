@@ -28,7 +28,8 @@
  * @note Используется для тестирования отдельных уравнений
  * @see solve_square_equation
  */
-bool test_one_equation(struct Coeffs test_cf, struct Roots expected);
+bool test_one_equation(Coeffs test_cf,
+                       Roots expected);
 
 /*!
  * @brief Проверка символа на конец файла (EOF)

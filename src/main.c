@@ -10,7 +10,6 @@
  */
 
 #include <stdio.h>
-#include <assert.h>
 #include <string.h>
 #include <stdbool.h>
 #include <math.h>
@@ -18,6 +17,7 @@
 #include "double_operations.h"
 #include "solve_equation.h"
 #include "unit_tests.h"
+#include "myassert.h"
 
 #define INPUTSIZE 20 ///< Размер буфера для ввода
 #define YES_ANSWER "Да" ///< Строка подтверждения продолжения
@@ -33,7 +33,7 @@
  * @warning equation_coeffs не должен быть NULL
  * @see input_coeff
  */
-void input(struct Coeffs *equation_coeffs);
+void input(Coeffs *equation_coeffs);
 
 /**
  * @brief Ввод отдельного коэффициента
@@ -96,11 +96,11 @@ bool continue_enter();
  * @warning equation_roots.amount не должен быть UndigistedRoot
  * @note Форматирует вывод для разных случаев количества корней
  */
-void print_ans(struct Roots equation_roots);
+void print_ans(Roots equation_roots);
 
-void input(struct Coeffs *equation_coeffs)
+void input(Coeffs *equation_coeffs)
 {
-    assert(equation_coeffs && "NULL pointer on equation_coeffs");
+    MYASSERT(equation_coeffs, "NULL pointer on equation_coeffs");
 
     printf("Введите коэффициенты квадратного трёхчлена.\n");
     input_coeff('a', &equation_coeffs->a);
@@ -110,7 +110,7 @@ void input(struct Coeffs *equation_coeffs)
 
 void input_coeff(char curr_coeff, double *inputing_coeff)
 {
-    assert(inputing_coeff && "NULL pointer on inputing_coeff");
+    MYASSERT(inputing_coeff, "NULL pointer on inputing_coeff");
 
     bool flag_retry = true;
     do {
@@ -151,14 +151,14 @@ bool continue_enter()
     return true;
 }
 
-void print_ans(struct Roots equation_roots)
+void print_ans(Roots equation_roots)
 {
     double x1 = equation_roots.x1;
     double x2 = equation_roots.x2;
     int roots_amount = equation_roots.amount;
 
-    assert(roots_amount != UndigistedRoot && "Roots not calculated");
-    assert((!isnan(x1) || roots_amount < OneRoot) && "Invalid root state");
+    MYASSERT(roots_amount != UndigistedRoot, "Roots not calculated");
+    MYASSERT((!isnan(x1) || roots_amount < OneRoot), "Invalid root state");
 
     switch (roots_amount) {
         case ZeroRoots:
@@ -207,8 +207,8 @@ int main(int argc, char *argv[]) {
     }
 
     // Инициализация структур данных
-    struct Coeffs equation_coeffs = {.a = NAN, .b = NAN, .c = NAN};
-    struct Roots equation_roots = {.x1 = NAN, .x2 = NAN, .amount = UndigistedRoot};
+    Coeffs equation_coeffs = {.a = NAN, .b = NAN, .c = NAN};
+    Roots equation_roots = {.x1 = NAN, .x2 = NAN, .amount = UndigistedRoot};
 
     // Основной цикл работы программы
     do {

@@ -1,5 +1,7 @@
+.PHONY: clean run debug test help doxy-docs doxy-open
 #Compiler and flags
 CC = gcc
+DIR = src
 CFLAGS = -D_DEBUG -ggdb3 -std=c17 -O0 -Wall -Wextra \
         -Waggressive-loop-optimizations \
         -Wmissing-declarations -Wcast-align -Wcast-qual \
@@ -31,15 +33,23 @@ SANITIZERS = -fsanitize=address,alignment,bool,bounds,enum,$\
 LDFLAGS = $(SANITIZERS) -pie -fPIE -lm
 
 #Source files
-SRCS = ./src/main.c ./src/double_operations.c ./src/solve_equation.c ./src/unit_tests.c
+SRCS = $(DIR)/main.c $(DIR)/double_operations.c $(DIR)/solve_equation.c $(DIR)/unit_tests.c
 OBJS = $(SRCS:.c=.o)
 TARGET = square_solver
+DOCFILE = ./documentation/html/index.html
+BROWSER = firefox #might be set to "google-chrome"
+
 
 # Colors for output
-GREEN = \033[0;32m
-RED = \033[0;31m
-BLUE = \033[0;34m
-NC = \033[0m
+BLACK   := \033[0;30m
+RED     := \033[0;31m
+GREEN   := \033[0;32m
+YELLOW  := \033[0;33m
+BLUE    := \033[0;34m
+MAGENTA := \033[0;35m
+CYAN    := \033[0;36m
+WHITE   := \033[0;37m
+NC      := \033[0m
 
 #Main target
 $(TARGET): $(OBJS)
@@ -48,7 +58,8 @@ $(TARGET): $(OBJS)
                 echo "$(GREEN)Сборка проведена успешно в $(TARGET)!$(NC)"; \
         else \
                 echo "$(RED)✗ Ошибка при сборке$(NC)"; \
-		exit 1; \
+				echo "$(YELLOW)Удаление объектных файлов...$(NC)"; \
+                rm -f $(OBJS) *.gcno *.gcda; \
         fi
 
 #Compile .c to .o
@@ -65,9 +76,9 @@ clean:
 
 #Run the program
 run: $(TARGET)
-	@echo "$(BLUE)Запуск программы ...$(NC)"
+	@echo "$(CYAN)=== ЗАПУСК ПРОГРАММЫ ===$(NC)"
 	./$(TARGET)
-	@echo "$(GREEN)Программа завершена!$(NC)"
+	@echo "$(GREEN)=== ПРОГРАММА ЗАВЕРШЕНА ===!$(NC)"
 
 #Run with debugger
 debug: $(TARGET)
@@ -76,15 +87,24 @@ debug: $(TARGET)
 
 #Run tests
 test: $(TARGET)
-	@echo "$(BLUE)=== ЗАПУСК ТЕСТОВ ===$(NC)"
+	@echo "$(MAGENTA)=== ЗАПУСК ТЕСТОВ ===$(NC)"
 	./$(TARGET) --test
-	@echo "$(BLUE)=== ТЕСТЫ ЗАВЕРШЕНЫ ===$(NC)"
+	@echo "$(MAGENTA)=== ТЕСТЫ ЗАВЕРШЕНЫ ===$(NC)"
+
+doxy-docs:
+	doxygen Doxyfile
+
+doxy-open:
+	$(BROWSER) $(DOCFILE)
 
 help:
 	@echo "$(BLUE)Доступные команды:$(NC)"
-	@echo "  make all     - собрать обычную версию программы"
-	@echo "  make test    - собрать тестовую версию и запустить тесты"
-	@echo "  make clean   - очистить сборочные файлы"
-	@echo "  make help    - показать эту справку"
-
-.PHONY: clean run debug test
+	@echo "	$(MAGENTA)Команды по работе с файлами проекта:$(NC)"
+	@echo "		$(CYAN)make all$(NC) - собрать обычную версию программы"
+	@echo "		$(CYAN)make test$(NC) - собрать тестовую версию и запустить тесты"
+	@echo "		$(CYAN)make clean$(NC) - очистить сборочные файлы"
+	@echo "	$(MAGENTA)Команды по работе с документацией:$(NC)"
+	@echo "		$(CYAN)make doxy-docs$(NC) - сгенерировать документацию по проекту"
+	@echo "		$(CYAN)make doxy-open$(NC) - открыть документацию по проекту"
+	@echo "	$(MAGENTA)Другие команды:$(NC)"
+	@echo "		$(CYAN)make help$(NC) - показать эту справку"

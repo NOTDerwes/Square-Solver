@@ -24,8 +24,8 @@ void test_solve_equation(char path[]) {
 
     int red_nums = 0;
 
-    struct Coeffs test_cf = {.a = NAN, .b = NAN, .c = NAN};
-    struct Roots expected = {.x1 = NAN, .x2 = NAN, .amount = UndigistedRoot};
+    Coeffs test_cf = {.a = NAN, .b = NAN, .c = NAN};
+    Roots expected = {.x1 = NAN, .x2 = NAN, .amount = UndigistedRoot};
 
     int correct_tests_amount = 0;
     int tests_amount = 0;
@@ -57,9 +57,9 @@ void test_solve_equation(char path[]) {
 }
 
 
-bool test_one_equation(struct Coeffs test_cf,
-                       struct Roots expected) {
-    struct Roots result_rts = {.x1 = NAN, .x2 = NAN, .amount = UndigistedRoot};
+bool test_one_equation(Coeffs test_cf,
+                       Roots expected) {
+    Roots result_rts = {.x1 = NAN, .x2 = NAN, .amount = UndigistedRoot};
 
     solve_square_equation(test_cf,
                           &result_rts);

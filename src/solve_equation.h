@@ -33,11 +33,11 @@ enum roots_count {
  *
  * Структура хранит коэффициенты квадратного уравнения вида @f$ ax^2 + bx + c = 0 @f$
  */
-struct Coeffs {
+typedef struct {
     double a; ///< Коэффициент при @f$ x^2 @f$
     double b; ///< Коэффициент при @f$ x @f$
     double c; ///< Свободный член
-};
+} Coeffs;
 
 /*!
  * @struct Roots
@@ -46,11 +46,11 @@ struct Coeffs {
  * Структура хранит корни уравнения и информацию об их количестве.
  * Для отдельных случаев корням присваиваются значения NaN.
  */
-struct Roots {
+typedef struct {
     double x1; ///< Меньший корень уравнения, по умолчанию NaN (если корней нет или бесконечно)
     double x2; ///< Больший корень уравнения, по умолчанию NaN (если меньше 2 корней или бесконечно)
     enum roots_count amount; ///< Количество корней (см. roots_count)
-};
+} Roots;
 
 /*!
  * @brief Решение квадратного уравнения
@@ -66,8 +66,8 @@ struct Roots {
  * @note Устанавливает x1 и x2 в NaN при отсутствии корней, если корень один, устанавливает только x2 в NaN
  * @see solve_linear_equation(), reset_structs()
  */
-void solve_square_equation(struct Coeffs equation_coeffs,
-                           struct Roots *equation_roots);
+void solve_square_equation(Coeffs equation_coeffs,
+                           Roots *equation_roots);
 
 /*!
  * @brief Решение линейного уравнения
@@ -104,7 +104,7 @@ void solve_linear_equation(double k, double b,
  * @warning Указатели не должны быть NULL
  * @note Используется для сброса структур при повторном использовании
  */
-void reset_structs(struct Coeffs *reseting_coeffs,
-                   struct Roots *reseting_roots);
+void reset_structs(Coeffs *reseting_coeffs,
+                   Roots *reseting_roots);
 
 #endif
