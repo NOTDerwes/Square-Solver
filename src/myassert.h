@@ -13,6 +13,8 @@
 #define MYASSERT_H
 
 #include <stdio.h>
+#include <stdlib.h>
+#include "string_operations.h"
 
 /**
  * @def MYASSERT(expr, err_out)
@@ -36,8 +38,13 @@
  *
  * @see assert из стандартной библиотеки
  */
-#define MYASSERT(expr, err_out) \
-    (expr ? printf("Assert finished correctly. Continue the program\n") : \
-    (printf("%s\n", err_out), exit(1)))
+
+#define MYASSERT(expr, fmt)                    \
+    if (!(expr)) {                                   \
+        WRITE_TO_FILE("./log-files/myassert.log", \
+        ERROR_MESSAGE(fmt))                       \
+        fprintf(stderr, ERROR_MESSAGE(fmt));       \
+        exit(1);                               \
+    }
 
 #endif

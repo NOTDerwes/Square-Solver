@@ -33,7 +33,7 @@ SANITIZERS = -fsanitize=address,alignment,bool,bounds,enum,$\
 LDFLAGS = $(SANITIZERS) -pie -fPIE -lm
 
 #Source files
-SRCS = $(DIR)/main.c $(DIR)/double_operations.c $(DIR)/solve_equation.c $(DIR)/unit_tests.c
+SRCS = $(DIR)/main.c $(DIR)/double_operations.c $(DIR)/solve_equation.c $(DIR)/unit_tests.c $(DIR)/user_interaction.c $(DIR)/string_operations.c
 OBJS = $(SRCS:.c=.o)
 TARGET = square_solver
 DOCFILE = ./documentation/html/index.html
@@ -41,15 +41,15 @@ BROWSER = firefox #might be set to "google-chrome"
 
 
 # Colors for output
-BLACK   := \033[0;30m
-RED     := \033[0;31m
-GREEN   := \033[0;32m
-YELLOW  := \033[0;33m
-BLUE    := \033[0;34m
-MAGENTA := \033[0;35m
-CYAN    := \033[0;36m
-WHITE   := \033[0;37m
-NC      := \033[0m
+BLACK = \033[0;30m
+RED = \033[0;31m
+GREEN = \033[0;32m
+YELLOW = \033[0;33m
+BLUE = \033[0;34m
+MAGENTA = \033[0;35m
+CYAN = \033[0;36m
+WHITE = \033[0;37m
+NC = \033[0m
 
 #Main target
 $(TARGET): $(OBJS)
@@ -78,7 +78,7 @@ clean:
 run: $(TARGET)
 	@echo "$(CYAN)=== ЗАПУСК ПРОГРАММЫ ===$(NC)"
 	./$(TARGET)
-	@echo "$(GREEN)=== ПРОГРАММА ЗАВЕРШЕНА ===!$(NC)"
+	@echo "$(GREEN)=== ПРОГРАММА ЗАВЕРШЕНА ===$(NC)"
 
 #Run with debugger
 debug: $(TARGET)

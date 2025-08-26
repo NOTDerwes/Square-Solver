@@ -13,11 +13,7 @@
 
 #include "unit_tests.h"
 #include "double_operations.h"
-
-bool check_EOF(int symbol_eof) {
-    return symbol_eof == EOF;
-}
-
+#include "string_operations.h"
 
 void test_solve_equation(char path[]) {
     FILE *input_file = fopen(path, "r");
