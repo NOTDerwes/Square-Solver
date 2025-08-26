@@ -22,10 +22,10 @@
 #define BORDER_DASH   "----------------------------------------"
 
 
-#define ERROR_MESSAGE(fmt)                       \
-    YELLOW BORDER_HASH NC "\n" __DATE__ " "      \
-    __TIME__ " " __FILE__ " %d\n" RED "[ERROR]:" \
-    NC fmt "\n" YELLOW BORDER_HASH NC "\n",      \
+#define ERROR_MESSAGE(fmt, ...)                            \
+    YELLOW BORDER_HASH NC "\n" __DATE__ " "                \
+    __TIME__ " " __FILE__ " %d\n" RED "[ERROR]: "          \
+    NC fmt " " __VA_ARGS__"\n" YELLOW BORDER_HASH NC "\n", \
     __LINE__
 
 

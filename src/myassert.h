@@ -39,7 +39,7 @@
  * @see assert из стандартной библиотеки
  */
 
-#define MYASSERT(expr, fmt)                    \
+#define MYASSERT(expr, fmt, ...)                    \
     if (!(expr)) {                                   \
         WRITE_TO_FILE("./log-files/myassert.log", \
         ERROR_MESSAGE(fmt))                       \

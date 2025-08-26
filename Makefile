@@ -57,45 +57,53 @@ $(TARGET): $(OBJS)
 	@if $(CC) $(CFLAGS) -o $@ $(OBJS) $(LDFLAGS); then \
                 echo "$(GREEN)Сборка проведена успешно в $(TARGET)!$(NC)"; \
         else \
-                echo "$(RED)✗ Ошибка при сборке$(NC)"; \
+                echo "$(RED)Ошибка при сборке$(NC)"; \
 				echo "$(YELLOW)Удаление объектных файлов...$(NC)"; \
                 rm -f $(OBJS) *.gcno *.gcda; \
         fi
+	@echo "$(RED)ДЕЛАЙ COMMIT НА GITHUB!!!$(NC)"
 
 #Compile .c to .o
 %.o: %.c
 	@echo "$(BLUE)Компиляция ...$(NC)"
 	$(CC) $(CFLAGS) $(SANITIZERS) -c $< -o $@
 	@echo "$(GREEN)Компиляция проведена успешно!$(NC)"
+	@echo "$(RED)ДЕЛАЙ COMMIT НА GITHUB!!!$(NC)"
 
 #Clean build files
 clean:
 	@echo "$(BLUE)Очистка...$(NC)"
 	rm -f $(OBJS) $(TARGET) *.gcno *.gcda
 	@echo "$(GREEN)Очистка завершена!$(NC)"
+	@echo "$(RED)ДЕЛАЙ COMMIT НА GITHUB!!!$(NC)"
 
 #Run the program
 run: $(TARGET)
 	@echo "$(CYAN)=== ЗАПУСК ПРОГРАММЫ ===$(NC)"
 	./$(TARGET)
 	@echo "$(GREEN)=== ПРОГРАММА ЗАВЕРШЕНА ===$(NC)"
+	@echo "$(RED)ДЕЛАЙ COMMIT НА GITHUB!!!$(NC)"
 
 #Run with debugger
 debug: $(TARGET)
 	@echo "$(BLUE)=== ЗАПУСК ОТЛАДКИ ===$(NC)"
 	gdb -q ./$(TARGET)
+	@echo "$(RED)ДЕЛАЙ COMMIT НА GITHUB!!!$(NC)"
 
 #Run tests
 test: $(TARGET)
 	@echo "$(MAGENTA)=== ЗАПУСК ТЕСТОВ ===$(NC)"
 	./$(TARGET) --test
 	@echo "$(MAGENTA)=== ТЕСТЫ ЗАВЕРШЕНЫ ===$(NC)"
+	@echo "$(RED)ДЕЛАЙ COMMIT НА GITHUB!!!$(NC)"
 
 doxy-docs:
 	doxygen Doxyfile
+	@echo "$(RED)ДЕЛАЙ COMMIT НА GITHUB!!!$(NC)"
 
 doxy-open:
 	$(BROWSER) $(DOCFILE)
+	@echo "$(RED)ДЕЛАЙ COMMIT НА GITHUB!!!$(NC)"
 
 help:
 	@echo "$(BLUE)Доступные команды:$(NC)"
@@ -108,3 +116,4 @@ help:
 	@echo "		$(CYAN)make doxy-open$(NC) - открыть документацию по проекту"
 	@echo "	$(MAGENTA)Другие команды:$(NC)"
 	@echo "		$(CYAN)make help$(NC) - показать эту справку"
+
