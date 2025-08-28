@@ -17,8 +17,11 @@
 
 void solve_square_equation(Coeffs equation_coeffs,
                            Roots *equation_roots) {
-    double a = equation_coeffs.a, b = equation_coeffs.b, c = equation_coeffs.c;
-    double *x1 = &(equation_roots -> x1), *x2 = &(equation_roots -> x2);
+    double a = equation_coeffs.a;
+    double b = equation_coeffs.b;
+    double c = equation_coeffs.c;
+    double *x1 = &(equation_roots -> x1);
+    double *x2 = &(equation_roots -> x2);
     int *roots_amount = &(equation_roots -> amount);
 
     MYASSERT(x1, "NULL pointer on x1");

@@ -119,7 +119,7 @@ bool test_one_equation(Coeffs test_cf,
     if ((result_rts.amount != expected.amount) ||
         !absolutely_same_doubles(expected.x2, result_rts.x2) ||
         !absolutely_same_doubles(expected.x1, result_rts.x1)) {
-        printf("ERROR in func \"solve_square_equation\"!\n\nINPUT COEFFS\na: %lf\nb: %lf\nc: %lf\n", test_cf.a, test_cf.a, test_cf.c);
+        printf("ERROR in func \"solve_square_equation\"!\n\nINPUT COEFFS\na: %lf\nb: %lf\nc: %lf\n", test_cf.a, test_cf.b, test_cf.c);
         printf("EXPECTED\nroots amount: %d\nx1: %lf\nx2: %lf\n", expected.amount, expected.x1, expected.x2);
         printf("GOT\nroots amount: %d\nx1: %lf\nx2: %lf\n", result_rts.amount, result_rts.x1, result_rts.x2);
         printf("PLEASE CHECK YOUR FUNCTION!\n\n\n\n");
