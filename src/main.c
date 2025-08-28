@@ -9,11 +9,8 @@
  * с обработкой пользовательского ввода и выводом результатов.
  */
 
-#include <stdio.h>
 #include <string.h>
-#include <stdbool.h>
 #include <math.h>
-#include <assert.h>
 
 #include "double_operations.h"
 #include "solve_equation.h"
@@ -42,11 +39,29 @@
  * @see continue_enter
  */
 int main(int argc, char *argv[]) {
-    MYASSERT(0, "Zero value");
-    //Запуск тестов
+    // Запуск программы с флагами
     for (int i = 1; i < argc; i++) {
-        if (strcmp(argv[i], "--test") == 0) {
-            test_solve_equation("./tests/test_input.txt");
+        if (strcmp(argv[i], "--test") == 0 || strcmp(argv[i], "-t") == 0) {
+            char *test_file_path = "./tests/test_input.txt"; // Путь до файла с тестами по умолчанию
+            if (i + 1 < argc && argv[i + 1][0] != '-') {
+                    test_file_path = argv[++i]; // Берем следующий аргумент как путь
+            }
+            test_solve_equation(test_file_path);
+            return 0;
+        }
+        else if (strcmp(argv[i], "--version") == 0 || strcmp(argv[i], "-v") == 0) {
+            printf("Решатель квадратных уравнений\n");
+            printf("Версия: Beta\n");
+            printf("Автор: NOTDerwes\n");
+            return 0;
+        }
+        else if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0) {
+            printf("Флаги запуска программы ");
+            printf("Решатель Квадратных Уравнений\n");
+            printf("Функции:\n");
+            printf("    -h, --help                Показать это сообщение\n");
+            printf("    -v, --version             Информация о версии\n");
+            printf("    -t, --test <path_to_test> Запустить тесты, хранящиеся по пути path_to_file. По умолчанию запускает авторские тесты\n");
             return 0;
         }
     }

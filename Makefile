@@ -93,7 +93,7 @@ debug: $(TARGET)
 #Run tests
 test: $(TARGET)
 	@echo "$(MAGENTA)=== ЗАПУСК ТЕСТОВ ===$(NC)"
-	./$(TARGET) --test
+	./$(TARGET) --test $(TEST_PATH)
 	@echo "$(MAGENTA)=== ТЕСТЫ ЗАВЕРШЕНЫ ===$(NC)"
 	@echo "$(RED)ДЕЛАЙ COMMIT НА GITHUB!!!$(NC)"
 
@@ -109,7 +109,9 @@ help:
 	@echo "$(BLUE)Доступные команды:$(NC)"
 	@echo "	$(MAGENTA)Команды по работе с файлами проекта:$(NC)"
 	@echo "		$(CYAN)make all$(NC) - собрать обычную версию программы"
-	@echo "		$(CYAN)make test$(NC) - собрать тестовую версию и запустить тесты"
+	@echo "		$(CYAN)make test TEST_PATH=default$(NC) - собрать тестовую версию и запустить тесты.\n\
+			Для тестирования своих тестов нужно указать путь до тестируемого файла в TEST_PATH.\n\
+			По умолчанию открывает файл с авторскими тестами"
 	@echo "		$(CYAN)make clean$(NC) - очистить сборочные файлы"
 	@echo "	$(MAGENTA)Команды по работе с документацией:$(NC)"
 	@echo "		$(CYAN)make doxy-docs$(NC) - сгенерировать документацию по проекту"
