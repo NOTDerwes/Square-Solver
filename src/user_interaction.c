@@ -5,11 +5,11 @@
 #include "user_interaction.h"
 #include "myassert.h"
 #include "double_operations.h"
+#include "string_operations.h"
 
 void input(Coeffs *equation_coeffs)
 {
     MYASSERT(equation_coeffs, "NULL pointer on equation_coeffs");
-
     printf("Введите коэффициенты квадратного трёхчлена.\n");
     input_coeff('a', &equation_coeffs->a);
     input_coeff('b', &equation_coeffs->b);
@@ -17,12 +17,21 @@ void input(Coeffs *equation_coeffs)
 }
 
 
-void input_coeff(char curr_coeff, double *inputing_coeff)
-{
+void input_coeff(char curr_coeff, double *inputing_coeff) {
     MYASSERT(inputing_coeff, "NULL pointer on inputing_coeff");
-
+    int attempts = 0;
     bool flag_retry = true;
     do {
+        if (attempts == 10) {
+            printf(BORDER_DASH "\n" RED BOLD \
+            "Уважаемый пользователь, попробуйте включить мозгу и ввести коэффициент правильно\n" \
+            GREEN "С надеждой на ваш интеллект, автор\n" NC BORDER_DASH "\n");
+        }
+        else if(attempts == 100) {
+            printf(YELLOW "Ну лан, держи ачивку, заслужил\n" \
+            GREEN BOLD "Ачивка \"Отчаянный математик\" получена \n" NC \
+            MAGENTA "Цель: неправильно ввести коэффицицент 100 раз\n" NC);
+        }
         printf("Введите коэффициент %c: ", curr_coeff);
         int scan_result = scanf("%lf", inputing_coeff);
 
@@ -32,6 +41,7 @@ void input_coeff(char curr_coeff, double *inputing_coeff)
         } else {
             flag_retry = false;
         }
+        attempts++;
     } while(flag_retry);
 }
 

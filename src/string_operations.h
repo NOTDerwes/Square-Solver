@@ -27,12 +27,12 @@
 
 
 #define ERROR_MESSAGE(fmt)                         \
-    BORDER_HASH "\n%s %s\n[ERROR] in %s %s %d: "   \
+    BORDER_HASH "\n%s %s\n[MEOWRROR] in %s %s %d: "   \
     fmt "\n" BORDER_HASH "\n", META_INFO
 
 #define SUCCESS_MESSAGE()                            \
     BORDER_EQUAL                                     \
-    "\n%s %s\n[SUCCESSFULLY FINISHED] in %s %s %d\n" \
+    "\n%s %s\n[SUCCESSMURRRLY FINISHED] in %s %s %d\n" \
      BORDER_EQUAL "\n", META_INFO                    \
 
 

@@ -2,4 +2,3 @@
 documentation/
 src/*.o
 square_solver
-log-files/
