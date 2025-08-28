@@ -60,4 +60,14 @@ bool test_one_equation(Coeffs test_cf,
  */
 void test_solve_equation(char path[]);
 
+/*!
+ * @brief Функция test_solve_equation с другим форматом ввода
+ *
+ * Функция выполняет тот же набор команд, что и test_solve_equation,
+ * но преобразует входной файл в буфер и читает данные из него.
+ *
+ * @see test_solve_equation
+*/
+void test_with_dyn_arr(char path[]);
+
 #endif

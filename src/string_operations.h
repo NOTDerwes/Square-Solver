@@ -14,6 +14,8 @@
 #define BOLD "\033[1m"
 #define NC "\033[0m"
 
+#define UNDERLINE "\033[4m"
+
 #define BORDER_SINGLE "────────────────────────────────────────"
 #define BORDER_DOUBLE "════════════════════════════════════════"
 #define BORDER_STAR   "****************************************"
@@ -21,21 +23,39 @@
 #define BORDER_EQUAL  "========================================"
 #define BORDER_DASH   "----------------------------------------"
 
-
-#define ERROR_MESSAGE(fmt, ...)                            \
-    YELLOW BORDER_HASH NC "\n" __DATE__ " "                \
-    __TIME__ " " __FILE__ " %d\n" RED "[ERROR]: "          \
-    NC fmt " " __VA_ARGS__"\n" YELLOW BORDER_HASH NC "\n", \
-    __LINE__
+#define META_INFO  __DATE__, __TIME__, __FILE__, __FUNCTION__, __LINE__
 
 
-#define WRITE_TO_FILE(path, fmt)         \
-    FILE *input_file = fopen(path, "a"); \
-    if (input_file == NULL) {            \
-        input_file = fopen(path, "w");   \
-    }                                    \
-    fprintf(input_file, fmt);            \
-    fclose(input_file);
+#define ERROR_MESSAGE(fmt)                         \
+    BORDER_HASH "\n%s %s\n[ERROR] in %s %s %d: "   \
+    fmt "\n" BORDER_HASH "\n", META_INFO
+
+#define SUCCESS_MESSAGE()                            \
+    BORDER_EQUAL                                     \
+    "\n%s %s\n[SUCCESSFULLY FINISHED] in %s %s %d\n" \
+     BORDER_EQUAL "\n", META_INFO                    \
+
+
+#define CONSOLE_ERROR_MESSAGE(fmt)                 \
+    YELLOW BORDER_HASH CYAN "\n%s %s\n" RED        \
+    "[ERROR] in " MAGENTA "%s %s %d: " NC UNDERLINE\
+    fmt "\n" YELLOW BORDER_HASH NC "\n", META_INFO
+
+#define CONSOLE_SUCCESS_MESSAGE()                   \
+    YELLOW BORDER_EQUAL CYAN "\n%s %s\n" GREEN      \
+    "[SUCCESSFULLY FINISHED] in " MAGENTA "%s %s %d"\
+    NC "\n" YELLOW BORDER_EQUAL NC "\n", META_INFO
+
+
+#define WRITE_TO_FILE(path, fmt)            \
+do {                                        \
+    FILE *input_file = fopen(path, "a");    \
+    if (input_file == NULL) {               \
+        input_file = fopen(path, "w");      \
+    }                                       \
+    fprintf(input_file, fmt);               \
+    fclose(input_file);                     \
+} while(0)
 
 /*!
  * @brief Проверка символа на конец файла (EOF)

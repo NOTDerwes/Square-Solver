@@ -39,12 +39,19 @@
  * @see assert из стандартной библиотеки
  */
 
-#define MYASSERT(expr, fmt, ...)                    \
-    if (!(expr)) {                                   \
-        WRITE_TO_FILE("./log-files/myassert.log", \
-        ERROR_MESSAGE(fmt))                       \
-        fprintf(stderr, ERROR_MESSAGE(fmt));       \
-        exit(1);                               \
-    }
+#define MYASSERT(expr, fmt)                      \
+do {                                             \
+    if (!(expr)) {                               \
+        WRITE_TO_FILE("./log-files/myassert.log",\
+        ERROR_MESSAGE(fmt));                     \
+        fprintf(stderr,                          \
+        CONSOLE_ERROR_MESSAGE(fmt));             \
+        exit(1);                                 \
+    }                                            \
+    else {                                       \
+        WRITE_TO_FILE("./log-files/myassert.log",\
+        SUCCESS_MESSAGE());                      \
+    }                                            \
+} while (0)
 
 #endif
