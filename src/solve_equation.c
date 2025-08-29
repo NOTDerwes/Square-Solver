@@ -15,27 +15,34 @@
 #include "double_operations.h"
 #include "myassert.h"
 
-void solve_square_equation(Coeffs equation_coeffs,
-                           Roots *equation_roots) {
-    double a = equation_coeffs.a;
-    double b = equation_coeffs.b;
-    double c = equation_coeffs.c;
-    double *x1 = &(equation_roots -> x1);
-    double *x2 = &(equation_roots -> x2);
-    int *roots_amount = &(equation_roots -> amount);
+int solve_square_equation(SquareEquation *equation) {
+    double a = equation -> coeffs.a;
+    double b = equation -> coeffs.b;
+    double c = equation -> coeffs.c;
+    double *x1 = &(equation -> roots.x1);
+    double *x2 = &(equation -> roots.x2);
+    int *roots_amount = &(equation -> roots.amount);
 
-    MYASSERT(x1, "NULL pointer on x1");
-    MYASSERT(x2, "NULL pointer on x2");
-    MYASSERT(!isnan(a), "a is nan");
-    MYASSERT(!isnan(b), "b is nan");
-    MYASSERT(!isnan(c), "c is nan");
+    #ifdef NDEBUG
+        MYASSERT(x1, "NULL pointer on x1");
+        MYASSERT(x2, "NULL pointer on x2");
+        MYASSERT(!isnan(a), "a is nan");
+        MYASSERT(!isnan(b), "b is nan");
+        MYASSERT(!isnan(c), "c is nan");
+    #endif
 
+    if (!is_normal_double(a) || !is_normal_double(b) || !is_normal_double(c)) {
+        fprintf(stderr, CONSOLE_ERROR_MESSAGE("GOT NAN COEFFICIENT"));
+        return WRONGARG;
+    }
 
     *roots_amount = ZeroRoots;
 
     if (is_zero(a)) {
-        solve_linear_equation(b, c, x1, roots_amount);
-        return;
+        if (solve_linear_equation(b, c, x1, roots_amount) == SOLVED)
+            return SOLVED;
+        else
+            return RESERR;
     }
     else {
         double discriminant = b * b - 4 * a * c;
@@ -52,15 +59,32 @@ void solve_square_equation(Coeffs equation_coeffs,
 
     if (is_zero(*x1))
         *x1 = 0;
-
     if (is_zero(*x2))
         *x2 = 0;
+
+    if (*roots_amount == ZeroRoots || *roots_amount == UndefinedRoot) {
+        if (is_normal_double(*x1) || is_normal_double(*x2))
+            return RESERR;
+    }
+    else if (*roots_amount == OneRoot) {
+        if (!is_normal_double(*x1) || is_normal_double(*x2))
+            return RESERR;
+    }
+    else if (*roots_amount == TwoRoots) {
+        if (!is_normal_double(*x1) || !is_normal_double(*x2))
+            return RESERR;
+    }
+
+    return SOLVED;
 }
 
 
-void solve_linear_equation(double k, double b,
-                           double *x,
-                           int *roots_amount) {
+int solve_linear_equation(double k, double b,
+                          double *x,
+                          int *roots_amount) {
+    if (!is_normal_double(k) || !is_normal_double(b))
+        return WRONGARG;
+
     if (is_zero(k)) {
             if (is_zero(b))
                 *roots_amount = UndefinedRoot;
@@ -71,15 +95,23 @@ void solve_linear_equation(double k, double b,
         }
     if (is_zero(*x))
         *x = 0;
+
+    if (*roots_amount == UndefinedRoot && is_normal_double(*x))
+        return RESERR;
+    else if (*roots_amount == OneRoot && !is_normal_double(*x))
+        return RESERR;
+
+    return SOLVED;
 }
 
 
-void reset_structs(Coeffs *reseting_coeffs,
-                   Roots *reseting_roots) { /// set all Coeffs and Roots structure elements default value
-    reseting_coeffs -> a = NAN;
-    reseting_coeffs -> b = NAN;
-    reseting_coeffs -> c = NAN;
-    reseting_roots -> x1 = NAN;
-    reseting_roots -> x2 = NAN;
-    reseting_roots -> amount = UndigistedRoot;
+int reset_structs(SquareEquation *reseting_equation) { /// set all Coeffs and Roots structure elements default value
+    reseting_equation -> coeffs.a = NAN;
+    reseting_equation -> coeffs.b = NAN;
+    reseting_equation -> coeffs.c = NAN;
+    reseting_equation -> roots.x1 = NAN;
+    reseting_equation -> roots.x2 = NAN;
+    reseting_equation -> roots.amount = UndigistedRoot;
+
+    return SOLVED;
 }

@@ -15,47 +15,54 @@
 #include "double_operations.h"
 #include "string_operations.h"
 
-void test_solve_equation(char path[]) {
+int test_solve_equation(char path[]) {
     FILE *input_file = fopen(path, "r");
+    if (!input_file) {
+        printf(CONSOLE_ERROR_MESSAGE("MISSING TEST INPUT FILE"));
+        return FILEERR;
+    }
 
     int red_nums = 0;
-
-    Coeffs test_cf = {.a = NAN, .b = NAN, .c = NAN};
-    Roots expected = {.x1 = NAN, .x2 = NAN, .amount = UndigistedRoot};
+    SquareEquation test_equation = {
+        .coeffs = {.a = NAN, .b = NAN, .c = NAN},
+        .roots = {.x1 = NAN, .x2 = NAN, .amount = UndigistedRoot}
+    };
 
     int correct_tests_amount = 0;
     int tests_amount = 0;
 
-    while (true) {
-        reset_structs(&test_cf,
-                      &expected);
+    while (!check_EOF(red_nums)) {
+        reset_structs(&test_equation);
 
-        red_nums = fscanf(input_file, "%lf %lf %lf | %d", &test_cf.a, &test_cf.b, &test_cf.c, &expected.amount);
+        red_nums = fscanf(input_file, "%lf %lf %lf | %d", &test_equation.coeffs.a, &test_equation.coeffs.b, &test_equation.coeffs.c, &test_equation.roots.amount);
 
-        if (expected.amount == TwoRoots) {
-            fscanf(input_file, "%lf %lf", &expected.x1, &expected.x2);
-            if (expected.x1 > expected.x2)
-                swap_doubles(&expected.x1, &expected.x2);
+        if (test_equation.roots.amount == TwoRoots) {
+            fscanf(input_file, "%lf %lf", &test_equation.roots.x1, &test_equation.roots.x2);
+            if (test_equation.roots.x1 > test_equation.roots.x2)
+                swap_doubles(&test_equation.roots.x1, &test_equation.roots.x2);
         }
-        else if (expected.amount == OneRoot)
-            fscanf(input_file, "%lf", &expected.x1);
+        else if (test_equation.roots.amount == OneRoot)
+            fscanf(input_file, "%lf", &test_equation.roots.x1);
 
         if (check_EOF(red_nums)) {
             break;
         }
-        if (test_one_equation(test_cf,
-                             expected))
+
+        if (test_one_equation(test_equation))
             correct_tests_amount++;
 
         tests_amount++;
     }
     printf(GREEN "CORRECTLY COMPLETED TESTS: %lg%%\n\n" NC, 100.0 * correct_tests_amount / tests_amount);
+    return PASSED;
 }
 
 
-void test_with_dyn_arr(char path[]) {
-    Coeffs test_cf = {.a = NAN, .b = NAN, .c = NAN};
-    Roots expected = {.x1 = NAN, .x2 = NAN, .amount = UndigistedRoot};
+int test_with_dyn_arr(char path[]) {
+    SquareEquation test_equation = {
+        .coeffs = {.a = NAN, .b = NAN, .c = NAN},
+        .roots = {.x1 = NAN, .x2 = NAN, .amount = UndigistedRoot}
+    };
 
     int correct_tests_amount = 0;
     int tests_amount = 0;
@@ -64,9 +71,8 @@ void test_with_dyn_arr(char path[]) {
 
     if (!input_file) {
         printf("Cannot open file");
-        return;
+        return FILEERR;
     }
-    //MYASSERT(input_file, "File \"test_input.txt.\" is missing or placed in wrong directory");
 
     fseek(input_file, 0, SEEK_END);
     size_t inp_size = (size_t) ftell(input_file);
@@ -81,47 +87,46 @@ void test_with_dyn_arr(char path[]) {
     fclose(input_file);
 
     while (pos - input + 1 < (int) inp_size) {
-        reset_structs(&test_cf,
-                      &expected);
+        reset_structs(&test_equation);
 
-        sscanf(pos, "%lf %lf %lf | %d%n", &test_cf.a, &test_cf.b, &test_cf.c, &expected.amount, &shift);
+        sscanf(pos, "%lf %lf %lf | %d%n", &test_equation.coeffs.a, &test_equation.coeffs.b, &test_equation.coeffs.c, &test_equation.roots.amount, &shift);
         pos += shift;
 
-        if (expected.amount == TwoRoots) {
-            sscanf(pos, "%lf %lf%n", &expected.x1, &expected.x2, &shift);
+        if (test_equation.roots.amount == TwoRoots) {
+            sscanf(pos, "%lf %lf%n", &test_equation.roots.x1, &test_equation.roots.x2, &shift);
             pos += shift;
 
-            if (expected.x1 > expected.x2)
-                swap_doubles(&expected.x1, &expected.x2);
+            if (test_equation.roots.x1 > test_equation.roots.x2)
+                swap_doubles(&test_equation.roots.x1, &test_equation.roots.x2);
         }
-        else if (expected.amount == OneRoot) {
-            sscanf(pos, "%lf%n", &expected.x1, &shift);
+        else if (test_equation.roots.amount == OneRoot) {
+            sscanf(pos, "%lf%n", &test_equation.roots.x1, &shift);
             pos += shift;
         }
 
-        if (test_one_equation(test_cf,
-                             expected))
+        if (test_one_equation(test_equation))
             correct_tests_amount++;
         tests_amount++;
     }
     printf(GREEN "CORRECTLY COMPLETED TESTS: %lg%%\n\n", 100.0 * correct_tests_amount / tests_amount);
+
     free(input);
+    return PASSED;
 }
 
+bool test_one_equation(SquareEquation test_equation) {
+    SquareEquation result_equation = {
+        .coeffs = test_equation.coeffs,
+        .roots = {.x1 = NAN, .x2 = NAN, .amount = UndigistedRoot}
+    };
 
-bool test_one_equation(Coeffs test_cf,
-                       Roots expected) {
-    Roots result_rts = {.x1 = NAN, .x2 = NAN, .amount = UndigistedRoot};
-
-    solve_square_equation(test_cf,
-                          &result_rts);
-
-    if ((result_rts.amount != expected.amount) ||
-        !absolutely_same_doubles(expected.x2, result_rts.x2) ||
-        !absolutely_same_doubles(expected.x1, result_rts.x1)) {
-        printf("ERROR in func \"solve_square_equation\"!\n\nINPUT COEFFS\na: %lf\nb: %lf\nc: %lf\n", test_cf.a, test_cf.b, test_cf.c);
-        printf("EXPECTED\nroots amount: %d\nx1: %lf\nx2: %lf\n", expected.amount, expected.x1, expected.x2);
-        printf("GOT\nroots amount: %d\nx1: %lf\nx2: %lf\n", result_rts.amount, result_rts.x1, result_rts.x2);
+    if (solve_square_equation(&result_equation) != SOLVED ||
+        (result_equation.roots.amount != test_equation.roots.amount) ||
+        !absolutely_same_doubles(test_equation.roots.x2, result_equation.roots.x2) ||
+        !absolutely_same_doubles(test_equation.roots.x1, result_equation.roots.x1)) {
+        printf("ERROR in func \"solve_square_equation\"!\n\nINPUT COEFFS\na: %lf\nb: %lf\nc: %lf\n", test_equation.coeffs.a, test_equation.coeffs.b, test_equation.coeffs.c);
+        printf("EXPECTED\nroots amount: %d\nx1: %lf\nx2: %lf\n", test_equation.roots.amount, test_equation.roots.x1, test_equation.roots.x2);
+        printf("GOT\nroots amount: %d\nx1: %lf\nx2: %lf\n", result_equation.roots.amount, result_equation.roots.x1, result_equation.roots.x2);
         printf("PLEASE CHECK YOUR FUNCTION!\n\n\n\n");
         return false;
     }

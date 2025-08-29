@@ -42,16 +42,17 @@
 #define MYASSERT(expr, fmt)                      \
 do {                                             \
     if (!(expr)) {                               \
-        WRITE_TO_FILE("/tmp/myassert.log",\
+        WRITE_TO_FILE("/tmp/myassert.log",       \
         ERROR_MESSAGE(fmt));                     \
         fprintf(stderr,                          \
         CONSOLE_ERROR_MESSAGE(fmt));             \
         exit(1);                                 \
     }                                            \
     else {                                       \
-        WRITE_TO_FILE("/tmp/myassert.log",\
+        WRITE_TO_FILE("/tmp/myassert.log",       \
         SUCCESS_MESSAGE());                      \
     }                                            \
 } while (0)
+
 
 #endif

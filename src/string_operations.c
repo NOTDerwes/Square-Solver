@@ -13,6 +13,7 @@ bool letters_left() {
 }
 
 
-void clean_buffer() {
+int clean_buffer() {
     while (getchar() != '\n') {}
+    return STRINGOK;
 }

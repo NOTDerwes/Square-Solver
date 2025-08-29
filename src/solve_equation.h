@@ -28,6 +28,18 @@ enum roots_count {
 };
 
 /*!
+ * @enum solve_errs
+ * @brief Флаги выполнения функций решения уравнения
+ *
+ * Используется для определения характера ошибки выполнения функции
+ */
+enum solve_errs {
+    WRONGARG = -1,        ///< Неверный тип аргумента
+    RESERR = -23,         ///< Неверный набор возвращаемых переменных
+    SOLVED = 1            ///< Функция завершилась в штатном режиме
+};
+
+/*!
  * @struct Coeffs
  * @brief Коэффициенты квадратного уравнения
  *
@@ -52,6 +64,11 @@ typedef struct {
     enum roots_count amount; ///< Количество корней (см. roots_count)
 } Roots;
 
+typedef struct {
+    Coeffs coeffs;
+    Roots roots;
+} SquareEquation;
+
 /*!
  * @brief Решение квадратного уравнения
  *
@@ -66,8 +83,7 @@ typedef struct {
  * @note Устанавливает x1 и x2 в NaN при отсутствии корней, если корень один, устанавливает только x2 в NaN
  * @see solve_linear_equation(), reset_structs()
  */
-void solve_square_equation(Coeffs equation_coeffs,
-                           Roots *equation_roots);
+int solve_square_equation(SquareEquation *equation);
 
 /*!
  * @brief Решение линейного уравнения
@@ -87,7 +103,7 @@ void solve_square_equation(Coeffs equation_coeffs,
  * @note Для @f$ k = 0 @f$ и @f$ b \neq 0 @f$: нет корней
  * @see solve_square_equation(), Roots
  */
-void solve_linear_equation(double k, double b,
+int solve_linear_equation(double k, double b,
                            double *x,
                            int *roots_amount);
 
@@ -104,7 +120,6 @@ void solve_linear_equation(double k, double b,
  * @warning Указатели не должны быть NULL
  * @note Используется для сброса структур при повторном использовании
  */
-void reset_structs(Coeffs *reseting_coeffs,
-                   Roots *reseting_roots);
+int reset_structs(SquareEquation *reset_equation);
 
 #endif

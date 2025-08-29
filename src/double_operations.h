@@ -29,10 +29,20 @@
  * с учётом погрешности вычислений с плавающей точкой.
  */
 enum doubles_compare_flag {
-    NotDouble = -3,  ///< Хотя бы одно из чисел не является нормальным числом double (см. is_double())
     Smaller = -1,   ///< Первое число меньше второго
     Equal = 0,      ///< Числа равны с учётом погрешности
     Bigger = 1      ///< Первое число больше второго
+};
+
+/*!
+ * @enum double_error
+ * @brief Флаги, возвращаемые функциями при операции с переменными типа double
+ *
+ * Используется для определения характера ошибки выполнения функции
+ */
+enum double_error {
+    TYPEERR = -1,     ///< Аргумент не является нормальным числом double (см. is_normal_double()
+    CORRECTDOUBLE = 1  ///< Функция заверщилась штатно
 };
 
 /*!
@@ -43,12 +53,12 @@ enum doubles_compare_flag {
  *
  * @param[in] num Проверяемое число
  * @return @b true если число является нормальным double
- * @return @b false если число NaN, Inf или -Inf
+ * @return @b false если число NaN, Inf, -Inf или не является double
  *
  * @note Используется для валидации входных данных
  * @see same_double_type
  */
-bool is_double(double num);
+bool is_normal_double(double num);
 
 /*!
  * @brief Сравнение двух чисел double с учётом погрешности
@@ -80,7 +90,7 @@ int compare_doubles(double first, double second);
  * @return @b false если числа отличаются
  *
  * @note Используется same_double_type() и compare_doubles() для точного сравнения
- * @see same_double_type(), compare_doubles(), is_double()
+ * @see same_double_type(), compare_doubles(), is_normal_double()
  */
 bool absolutely_same_doubles(double first, double second);
 
@@ -96,7 +106,7 @@ bool absolutely_same_doubles(double first, double second);
  * @return @b false если типы чисел различны
  *
  * @note Полезно для проверки корректности операций между числами
- * @see is_double()
+ * @see is_normal_double()
  */
 bool same_double_type(double first, double second);
 
@@ -111,7 +121,7 @@ bool same_double_type(double first, double second);
  * @warning Указатели не должны быть NULL
  * @note Работает с любыми значениями double, включая NaN и Inf
  */
-void swap_doubles(double *first, double *second);
+int swap_doubles(double *first, double *second);
 
 /*!
  * @brief Проверка числа на равенство нулю с учётом погрешности

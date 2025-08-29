@@ -5,15 +5,27 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#define RED "\033[31m"
-#define GREEN "\033[32m"
-#define YELLOW "\033[33m"
-#define BLUE "\033[34m"
-#define CYAN "\033[36m"
-#define MAGENTA "\033[35m"
-#define BOLD "\033[1m"
+#define BLACK "\033[0;30m"
+#define RED "\033[0;31m"
+#define GREEN "\033[0;32m"
+#define YELLOW "\033[0;33m"
+#define BLUE "\033[0;34m"
+#define MAGENTA "\033[0;35m"
+#define CYAN "\033[0;36m"
+#define WHITE "\033[0;37m"
+#define ORANGE "\033[38;5;208m"
+#define PURPLE "\033[38;5;93m"
+#define PINK "\033[38;5;199m"
+#define LIME "\033[38;5;118m"
+#define TEAL "\033[38;5;30m"
+#define LAVENDER "\033[38;5;183m"
+#define CORAL "\033[38;5;203m"
+#define GOLD "\033[38;5;220m"
+#define SILVER "\033[38;5;7m"
+#define MAROON "\033[38;5;88m"
 #define NC "\033[0m"
 
+#define BOLD "\033[1m"
 #define UNDERLINE "\033[4m"
 
 #define BORDER_SINGLE "────────────────────────────────────────"
@@ -58,6 +70,17 @@ do {                                        \
 } while(0)
 
 /*!
+ * @enum str_err
+ * @brief Ошибки выполнения функций со строками
+ *
+ * Флаги ошибок функций, работающих со строками
+ */
+enum str_err {
+    STRINGERR = -3,  ///< Вызов операций со строкой вызвал ошибку
+    STRINGOK = 2           ///< Функция завершилась штатно
+};
+
+/*!
  * @brief Проверка символа на конец файла (EOF)
  *
  * Функция проверяет, является ли переданный символ маркером конца файла.
@@ -89,6 +112,6 @@ bool letters_left();
  *
  * @note Используется после некорректного ввода
  */
-void clean_buffer();
+int clean_buffer();
 
 #endif

@@ -7,6 +7,18 @@
 #define INPUTSIZE 20 ///< Размер буфера для ввода
 #define YES_ANSWER "Да" ///< Строка подтверждения продолжения
 
+/*!
+ * @enum interact_err
+ * @brief Флаги, возвращаемые функциями при взаимодействии с пользователем
+ *
+ * Используется для определения типа ошибки взаимодействия с пользователем
+ */
+enum interact_err {
+    INPUTERR = -43,      ///<
+    SELFDISTRACT = -100, ///<
+    CORRECTINTRCT = 52   ///<
+};
+
 /**
  * @brief Ввод коэффициентов уравнения
  *
@@ -18,7 +30,7 @@
  * @warning equation_coeffs не должен быть NULL
  * @see input_coeff
  */
-void input(Coeffs *equation_coeffs);
+int input(Coeffs *equation_coeffs);
 
 /**
  * @brief Ввод отдельного коэффициента
@@ -33,9 +45,9 @@ void input(Coeffs *equation_coeffs);
  * @note Повторяет запрос при некорректном вводе
  * @see letters_left
  * @see clean_buffer
- * @see is_double
+ * @see is_normal_double
  */
-void input_coeff(char curr_coeff, double *inputing_coeff);
+int input_coeff(char curr_coeff, double *inputing_coeff);
 
 /**
  * @brief Запрос на продолжение работы
@@ -60,6 +72,6 @@ bool continue_enter();
  * @warning equation_roots.amount не должен быть UndigistedRoot
  * @note Форматирует вывод для разных случаев количества корней
  */
-void print_ans(Roots equation_roots);
+int print_ans(Roots equation_roots);
 
 #endif

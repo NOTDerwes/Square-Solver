@@ -15,6 +15,19 @@
  */
 
 /*!
+ * @enum utest_err
+ * @brief Флаги выполнения тестов
+ *
+ * Флаги выполнения функций, проводящих юнит-тестирование
+ * функции solve_square_equation()
+ */
+ enum utest_err {
+    TESTERR = -23,   ///< Ошибка при тестировании (ошибка при вызове solve_square_equation())
+    FILEERR = -4,     ///< Ошибка при чтении/открытии файла с тестовыми данными (неправильный путь, файл не существует)
+    PASSED = 12          ///< Штатное выполнение теста
+ };
+
+/*!
  * @brief Тестирование решения одного квадратного уравнения
  *
  * Функция сравнивает корни, полученные от solve_square_equation,
@@ -28,8 +41,7 @@
  * @note Используется для тестирования отдельных уравнений
  * @see solve_square_equation
  */
-bool test_one_equation(Coeffs test_cf,
-                       Roots expected);
+bool test_one_equation(SquareEquation test_equation);
 
 /*!
  * @brief Запуск комплексного тестирования из файла
@@ -58,7 +70,7 @@ bool test_one_equation(Coeffs test_cf,
  * @endcode
  * @see Coeffs, Roots
  */
-void test_solve_equation(char path[]);
+int test_solve_equation(char path[]);
 
 /*!
  * @brief Функция test_solve_equation с другим форматом ввода
@@ -66,8 +78,10 @@ void test_solve_equation(char path[]);
  * Функция выполняет тот же набор команд, что и test_solve_equation,
  * но преобразует входной файл в буфер и читает данные из него.
  *
+ * @note При тестировании эта функция не используется
+ *
  * @see test_solve_equation
 */
-void test_with_dyn_arr(char path[]);
+int test_with_dyn_arr(char path[]);
 
 #endif

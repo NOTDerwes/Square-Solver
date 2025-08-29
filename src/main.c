@@ -17,6 +17,9 @@
 #include "unit_tests.h"
 #include "user_interaction.h"
 #include "myassert.h"
+#include "string_operations.h"
+#include "cats.h"
+#include "flags.h"
 
 
 /**
@@ -39,63 +42,29 @@
  * @see continue_enter
  */
 int main(int argc, char *argv[]) {
+
     // Запуск программы с флагами
-    for (int i = 1; i < argc; i++) {
-        if (strcmp(argv[i], "--test") == 0 || strcmp(argv[i], "-t") == 0) {
-            char *test_file_path = "./tests/test_input.txt"; // Путь до файла с тестами по умолчанию
-            if (i + 1 < argc && argv[i + 1][0] != '-') {
-                    test_file_path = argv[++i]; // Берем следующий аргумент как путь
-            }
-            test_solve_equation(test_file_path);
-            return 0;
-        }
-        else if (strcmp(argv[i], "--version") == 0 || strcmp(argv[i], "-v") == 0) {
-            printf("Решатель квадратных уравнений\n");
-            printf("Версия: Beta\n");
-            printf("Автор: NOTDerwes\n");
-            return 0;
-        }
-        else if (strcmp(argv[i], "--how") == 0 || strcmp(argv[i], "--instruction") == 0) {
-            printf("Чтобы решить квадратное уравнение, приведите исходное уравнение к виду:\n");
-            printf("ax^2 + bx + c = 0, где a, b, c - какие-то числа (если в приведенном виде степень многочлена больше 2, обратитесь к интернету.\n");
-            printf("Если у Вас получилось линейное уравнение (коэффициент a = 0), решите его Сами, этому учат в 3м классе).");
-            printf("Посчитайте дискриминант (D) уравнения по формуле D = b^2 - 4ac.\n");
-            printf("Если дискриминант меньше 0, то уравнение имеет 0 корней (на самом деле нет, но об этом вам расскажут как-нибудь потом).\n");
-            printf("Если дискриминант равен 0, уравнение имеет ровно 1 корень, который вычисляется по формуле x = -b / (2a).\n");
-            printf("Если дискриминант больше 0, уравнение имеет 2 корня. \n");
-            printf("Меньший корень вычисляется по формуле x_м = (-b - sqrt(D)) / (2a).\n");
-            printf("Больший корень вычисляется по формуле x_б = (-b + sqrt(D)) / (2a).\n");
-            printf("ПОЗДРАВЛЯЕМ, Вы решили квадратное уравнение.\n");
-            return 0;
-        }
-        else if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0) {
-            printf("Флаги запуска программы ");
-            printf("Решатель Квадратных Уравнений\n");
-            printf("Функции:\n");
-            printf("    -h, --help                Показать это сообщение\n");
-            printf("    -v, --version             Информация о версии\n");
-            printf("    -t, --test <path_to_test> Запустить тесты, хранящиеся по пути path_to_file. По умолчанию запускает авторские тесты\n");
-            return 0;
-        }
-    }
+    int flags = write_flags(argc, argv);
 
     // Инициализация структур данных
-    Coeffs equation_coeffs = {.a = NAN, .b = NAN, .c = NAN};
-    Roots equation_roots = {.x1 = NAN, .x2 = NAN, .amount = UndigistedRoot};
-    //MYASSERT(0, "ZERO VALUE GO");
+    SquareEquation equation = {
+        .coeffs = {.a = NAN, .b = NAN, .c = NAN},
+        .roots = {.x1 = NAN, .x2 = NAN, .amount = UndigistedRoot}
+    };
+    //MYASSERT(0, "ZERO VALUE GOT");
     // Основной цикл работы программы
     do {
         // Сброс структур перед новым вычислением
-        reset_structs(&equation_coeffs, &equation_roots);
+        reset_structs(&equation);
 
         // Ввод коэффициентов уравнения
-        input(&equation_coeffs);
+        if (input(&equation.coeffs) == INPUTERR) return 1;
 
         // Решение квадратного уравнения
-        solve_square_equation(equation_coeffs, &equation_roots);
+        if (solve_square_equation(&equation) != SOLVED) return 1;
 
         // Вывод результатов
-        print_ans(equation_roots);
+        print_ans(equation.roots);
 
     } while (continue_enter()); // Проверка желания продолжить
 

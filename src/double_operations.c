@@ -15,17 +15,16 @@
 
 #include "double_operations.h"
 
-bool is_double(double num) {
+bool is_normal_double(double num) {
     return !isnan(num) && !isinf(num);
 }
 
 
 int compare_doubles(double first, double second) {
+    if (!is_normal_double(first) || !is_normal_double(second))
+        return TYPEERR;
+
     double delta = first - second;
-
-    if (!is_double(first) || !is_double(second))
-        return NotDouble;
-
     if (delta < -DBL_EPSILON)
         return Smaller;
     else if (delta > DBL_EPSILON)
@@ -35,17 +34,16 @@ int compare_doubles(double first, double second) {
 
 
 bool same_double_type(double first, double second) {
-    if(isinf(first) && isinf(second))
+    if (isinf(first) && isinf(second))
         return signbit(first) == signbit(second);
     return (isnan(first) && isnan(second)) ||
-            (is_double(first) && is_double(second));
-
+            (is_normal_double(first) && is_normal_double(second));
 }
 
 
 bool absolutely_same_doubles(double first, double second) {
     if (same_double_type(first, second)) {
-        if (is_double(first))
+        if (is_normal_double(first))
             return compare_doubles(first, second) == Equal;
         return true;
     }
@@ -53,10 +51,13 @@ bool absolutely_same_doubles(double first, double second) {
 }
 
 
-void swap_doubles(double *first, double *second) {
+int swap_doubles(double *first, double *second) {
+    if (!is_normal_double(*first) || !is_normal_double(*second))
+        return TYPEERR;
     double temp = *first;
     *first = *second;
     *second = temp;
+    return CORRECTDOUBLE;
 }
 
 bool is_zero(double number) {
