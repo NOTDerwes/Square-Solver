@@ -11,9 +11,9 @@
 #include <stdio.h>
 #include <math.h>
 
-#include "unit_tests.h"
-#include "double_operations.h"
-#include "string_operations.h"
+#include "../headers/unit_tests.h"
+#include "../headers/double_operations.h"
+#include "../headers/string_operations.h"
 
 int test_solve_equation(char path[]) {
     FILE *input_file = fopen(path, "r");

@@ -1,7 +1,7 @@
 #include <math.h>
 #include <stdbool.h>
 #include <string.h>
-#include "flags.h"
+#include "../headers/flags.h"
 
 
 int write_flags(int argc, char *argv[]) {

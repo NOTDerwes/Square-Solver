@@ -34,7 +34,7 @@ SANITIZERS = -fsanitize=address,alignment,bool,bounds,enum,$\
 LDFLAGS = $(SANITIZERS) -pie -fPIE -lm
 
 #Source files
-SRCS = $(DIR)/main.c $(DIR)/double_operations.c $(DIR)/solve_equation.c \
+SRCS = main.c $(DIR)/double_operations.c $(DIR)/solve_equation.c \
 $(DIR)/unit_tests.c $(DIR)/user_interaction.c $(DIR)/string_operations.c \
 $(DIR)/cats.c $(DIR)/flags.c
 OBJS = $(SRCS:.c=.o)

@@ -13,7 +13,7 @@
 #include <float.h>
 #include <math.h>
 
-#include "double_operations.h"
+#include "../headers/double_operations.h"
 
 bool is_normal_double(double num) {
     return !isnan(num) && !isinf(num);

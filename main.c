@@ -12,14 +12,14 @@
 #include <string.h>
 #include <math.h>
 
-#include "double_operations.h"
-#include "solve_equation.h"
-#include "unit_tests.h"
-#include "user_interaction.h"
-#include "myassert.h"
-#include "string_operations.h"
-#include "cats.h"
-#include "flags.h"
+#include "headers/double_operations.h"
+#include "headers/solve_equation.h"
+#include "headers/unit_tests.h"
+#include "headers/user_interaction.h"
+#include "headers/myassert.h"
+#include "headers/string_operations.h"
+#include "headers/cats.h"
+#include "headers/flags.h"
 
 
 /**

@@ -2,10 +2,10 @@
 #include <math.h>
 #include <string.h>
 
-#include "user_interaction.h"
-#include "myassert.h"
-#include "double_operations.h"
-#include "string_operations.h"
+#include "../headers/user_interaction.h"
+#include "../headers/myassert.h"
+#include "../headers/double_operations.h"
+#include "../headers/string_operations.h"
 
 int input(Coeffs *equation_coeffs)
 {

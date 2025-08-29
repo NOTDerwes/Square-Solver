@@ -11,9 +11,9 @@
 
 #include <math.h>
 
-#include "solve_equation.h"
-#include "double_operations.h"
-#include "myassert.h"
+#include "../headers/solve_equation.h"
+#include "../headers/double_operations.h"
+#include "../headers/myassert.h"
 
 int solve_square_equation(SquareEquation *equation) {
     double a = equation -> coeffs.a;
