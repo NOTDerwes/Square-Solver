@@ -41,21 +41,28 @@
 ## Структура проекта
 ```
 square-solver/
+├── documentation/              # Документация Doxygen
+├── Doxyfile                    # Конфигурация Doxygen
+├── headers/                    # Заголовочные файлы
+│   ├── double_operations.h
+│   ├── flags.h
+│   ├── myassert.h
+│   ├── solve_equation.h
+│   ├── string_operations.h
+│   ├── unit_tests.h
+│   └── user_interaction.h
+├── main.c                      # Главная программа
+├── Makefile                    # Makefile для сборки
+├── README.md                   # Этот файл
 ├── src/
-│   ├── main.c                 # Главная программа
-│   ├── solve_equation.c       # Решение уравнений
-│   ├── solve_equation.h       # Заголовочный файл
-│   ├── double_operations.c    # Операции с double
-│   ├── double_operations.h    # Заголовочный файл
-│   ├── unit_tests.c           # Модульные тесты
-│   └── unit_tests.h           # Заголовочный файл
-├── documentation/
-│   └── html/                  # Документация Doxygen
-├── tests/
-│   └── test_input.txt         # Тестовые данные
-├── Doxyfile                   # Конфигурация Doxygen
-├── Makefile                   # Makefile для сборки
-└── README.md                  # Этот файл
+│   ├── double_operations.c     # Операции с double
+│   ├── flags.c                 # Исполнение флагов выполнения программы
+│   ├── solve_equation.c        # Решение уравнений
+│   ├── string_operations.c     # Операции со строками
+│   ├── unit_tests.c            # Модульные тесты
+│   └── user_interaction.c      # Взаимодействие с пользователем
+└── tests/
+    └── test_input.txt          # Тестовые данные
 ```
 
 ## Быстрый старт
@@ -64,40 +71,17 @@ square-solver/
 ```bash
 # Клонирование репозитория
 git clone https://github.com/NOTDerwes/Square-Solver.git
-cd quadratic-solver
+cd square-solver
 
 # Сборка с Makefile
 make
-
-# Или ручная компиляция из папки square-solver
-gcc -D_DEBUG -ggdb3 -std=c17 -O0 -Wall -Wextra \
-    -Waggressive-loop-optimizations \
-    -Wmissing-declarations -Wcast-align -Wcast-qual \
-    -Wchar-subscripts -Wconditionally-supported -Wconversion \
-    -Wempty-body -Wfloat-equal \
-    -Wformat-nonliteral -Wformat-security -Wformat-signedness \
-    -Wformat=2 -Winline -Wlogical-op \
-    -Wpacked -Wpointer-arith \
-    -Winit-self -Wredundant-decls -Wshadow -Wsign-conversion \
-    -Wstrict-overflow=2 \
-    -Wsuggest-attribute=noreturn \
-    -Wswitch-default -Wswitch-enum -Wsync-nand -Wundef \
-    -Wunreachable-code -Wunused -Wuseless-cast -Wvariadic-macros \
-    -Wno-missing-field-initializers -Wno-narrowing \
-    -Wno-old-style-cast -Wno-varargs -Wstack-protector \
-    -fstack-protector \
-    -fstrict-overflow \
-    -fno-omit-frame-pointer -Wlarger-than=8192 \
-    -Wstack-usage=8192 -pie -fPIE -Werror=vla \
-    ./src/main.c ./src/solve_equation.c ./src/double_operations.c ./src/unit_tests.c \
-    -o quadratic_solver
 ```
 ### Запуск программы
 ```bash
 #Запуск с Makefile
 make run
 
-# Все доступные команды Makefile можно посмотреть по команде
+# Доступные команды Makefile можно посмотреть по команде
 make help
 ```
 #### Пример работы

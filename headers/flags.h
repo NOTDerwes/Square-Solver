@@ -3,27 +3,33 @@
 
 
 enum flag_pos {
-    Test,
-    Version,
-    Instruction,
-    Meow,
-    MeowPlus,
-    MeowPlusPlus,
-    Help
+    Test = 0,
+    Version = 1,
+    Instruction = 2,
+    Meow = 3,
+    MeowPlus = 4,
+    MeowPlusPlus = 5,
+    Help = 6,
+    SINGLE = 7,
+    FILE_INPUT = 8
+};
+
+enum flags_status {
+    FinishProgram = 0,
+    ExecuteMain = 1,
+    FlagsRed = 124
 };
 
 typedef struct {
-    bool test_flag;
-    bool version_flag;
-    bool instruct_flag;
-    bool meow_flag;
-    bool meow_plus_flag;
-    bool meow_plus_plus_flag;
-    bool help_flag;
-} Flags;
+    int Flags;
+    char *TestFilePath;
+    char *InstructionPath;
+} FlagsInfo;
 
-int write_flags(int argc, char *argv[]);
+int read_flags(int argc, char *argv[], FlagsInfo *information);
 
 int is_flag_on(int flags, enum flag_pos pos);
+
+int execute_flags(int argc, char *argv[], FlagsInfo *information);
 
 #endif

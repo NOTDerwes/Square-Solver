@@ -12,13 +12,9 @@
 #include <string.h>
 #include <math.h>
 
-#include "headers/double_operations.h"
 #include "headers/solve_equation.h"
-#include "headers/unit_tests.h"
 #include "headers/user_interaction.h"
 #include "headers/myassert.h"
-#include "headers/string_operations.h"
-#include "headers/cats.h"
 #include "headers/flags.h"
 
 
@@ -43,8 +39,15 @@
  */
 int main(int argc, char *argv[]) {
 
+    FlagsInfo information = {
+        .Flags = 0,
+        .TestFilePath = "tests/test_input.txt",
+        .InstructionPath = ".secrets/instruction.txt"
+    };
+
     // Запуск программы с флагами
-    int flags = write_flags(argc, argv);
+    if (execute_flags(argc, argv, &information) == FinishProgram)
+        return 0;
 
     // Инициализация структур данных
     SquareEquation equation = {
@@ -61,7 +64,7 @@ int main(int argc, char *argv[]) {
         if (input(&equation.coeffs) == INPUTERR) return 1;
 
         // Решение квадратного уравнения
-        if (solve_square_equation(&equation) != SOLVED) return 1;
+        if (solve_square_equation(&equation) != Solved) return 1;
 
         // Вывод результатов
         print_ans(equation.roots);

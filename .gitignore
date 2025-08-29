@@ -1,4 +1,3 @@
-../.vscode/settings.json
 documentation/
-src/*.o
+*.o
 square_solver

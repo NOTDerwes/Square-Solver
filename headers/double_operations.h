@@ -41,8 +41,8 @@ enum doubles_compare_flag {
  * Используется для определения характера ошибки выполнения функции
  */
 enum double_error {
-    TYPEERR = -1,     ///< Аргумент не является нормальным числом double (см. is_normal_double()
-    CORRECTDOUBLE = 1  ///< Функция заверщилась штатно
+    TypeErr = -1,     ///< Аргумент не является нормальным числом double (см. is_normal_double()
+    CorrectDouble = 1  ///< Функция заверщилась штатно
 };
 
 /*!

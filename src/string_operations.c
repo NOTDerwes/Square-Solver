@@ -15,5 +15,5 @@ bool letters_left() {
 
 int clean_buffer() {
     while (getchar() != '\n') {}
-    return STRINGOK;
+    return StringOk;
 }

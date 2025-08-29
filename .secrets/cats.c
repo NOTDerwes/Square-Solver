@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "../headers/string_operations.h"
-#include "../headers/cats.h"
+#include "../.secrets/cats.h"
 
 void meow() {
     printf("        ,-.       _,---._ __  / \\\n");

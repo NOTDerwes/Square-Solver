@@ -33,16 +33,16 @@ int solve_square_equation(SquareEquation *equation) {
 
     if (!is_normal_double(a) || !is_normal_double(b) || !is_normal_double(c)) {
         fprintf(stderr, CONSOLE_ERROR_MESSAGE("GOT NAN COEFFICIENT"));
-        return WRONGARG;
+        return WrongArg;
     }
 
     *roots_amount = ZeroRoots;
 
     if (is_zero(a)) {
-        if (solve_linear_equation(b, c, x1, roots_amount) == SOLVED)
-            return SOLVED;
+        if (solve_linear_equation(b, c, x1, roots_amount) == Solved)
+            return Solved;
         else
-            return RESERR;
+            return ResultErr;
     }
     else {
         double discriminant = b * b - 4 * a * c;
@@ -64,18 +64,18 @@ int solve_square_equation(SquareEquation *equation) {
 
     if (*roots_amount == ZeroRoots || *roots_amount == UndefinedRoot) {
         if (is_normal_double(*x1) || is_normal_double(*x2))
-            return RESERR;
+            return ResultErr;
     }
     else if (*roots_amount == OneRoot) {
         if (!is_normal_double(*x1) || is_normal_double(*x2))
-            return RESERR;
+            return ResultErr;
     }
     else if (*roots_amount == TwoRoots) {
         if (!is_normal_double(*x1) || !is_normal_double(*x2))
-            return RESERR;
+            return ResultErr;
     }
 
-    return SOLVED;
+    return Solved;
 }
 
 
@@ -83,7 +83,7 @@ int solve_linear_equation(double k, double b,
                           double *x,
                           int *roots_amount) {
     if (!is_normal_double(k) || !is_normal_double(b))
-        return WRONGARG;
+        return WrongArg;
 
     if (is_zero(k)) {
             if (is_zero(b))
@@ -97,11 +97,11 @@ int solve_linear_equation(double k, double b,
         *x = 0;
 
     if (*roots_amount == UndefinedRoot && is_normal_double(*x))
-        return RESERR;
+        return ResultErr;
     else if (*roots_amount == OneRoot && !is_normal_double(*x))
-        return RESERR;
+        return ResultErr;
 
-    return SOLVED;
+    return Solved;
 }
 
 
@@ -113,5 +113,5 @@ int reset_structs(SquareEquation *reseting_equation) { /// set all Coeffs and Ro
     reseting_equation -> roots.x2 = NAN;
     reseting_equation -> roots.amount = UndigistedRoot;
 
-    return SOLVED;
+    return Solved;
 }

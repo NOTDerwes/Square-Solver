@@ -19,7 +19,7 @@ int test_solve_equation(char path[]) {
     FILE *input_file = fopen(path, "r");
     if (!input_file) {
         printf(CONSOLE_ERROR_MESSAGE("MISSING TEST INPUT FILE"));
-        return FILEERR;
+        return FileErr;
     }
 
     int red_nums = 0;
@@ -54,7 +54,7 @@ int test_solve_equation(char path[]) {
         tests_amount++;
     }
     printf(GREEN "CORRECTLY COMPLETED TESTS: %lg%%\n\n" NC, 100.0 * correct_tests_amount / tests_amount);
-    return PASSED;
+    return Passed;
 }
 
 
@@ -71,7 +71,7 @@ int test_with_dyn_arr(char path[]) {
 
     if (!input_file) {
         printf("Cannot open file");
-        return FILEERR;
+        return FileErr;
     }
 
     fseek(input_file, 0, SEEK_END);
@@ -111,7 +111,7 @@ int test_with_dyn_arr(char path[]) {
     printf(GREEN "CORRECTLY COMPLETED TESTS: %lg%%\n\n", 100.0 * correct_tests_amount / tests_amount);
 
     free(input);
-    return PASSED;
+    return Passed;
 }
 
 bool test_one_equation(SquareEquation test_equation) {
@@ -120,7 +120,7 @@ bool test_one_equation(SquareEquation test_equation) {
         .roots = {.x1 = NAN, .x2 = NAN, .amount = UndigistedRoot}
     };
 
-    if (solve_square_equation(&result_equation) != SOLVED ||
+    if (solve_square_equation(&result_equation) != Solved ||
         (result_equation.roots.amount != test_equation.roots.amount) ||
         !absolutely_same_doubles(test_equation.roots.x2, result_equation.roots.x2) ||
         !absolutely_same_doubles(test_equation.roots.x1, result_equation.roots.x1)) {

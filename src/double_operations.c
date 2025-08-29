@@ -22,7 +22,7 @@ bool is_normal_double(double num) {
 
 int compare_doubles(double first, double second) {
     if (!is_normal_double(first) || !is_normal_double(second))
-        return TYPEERR;
+        return TypeErr;
 
     double delta = first - second;
     if (delta < -DBL_EPSILON)
@@ -53,11 +53,11 @@ bool absolutely_same_doubles(double first, double second) {
 
 int swap_doubles(double *first, double *second) {
     if (!is_normal_double(*first) || !is_normal_double(*second))
-        return TYPEERR;
+        return TypeErr;
     double temp = *first;
     *first = *second;
     *second = temp;
-    return CORRECTDOUBLE;
+    return CorrectDouble;
 }
 
 bool is_zero(double number) {
